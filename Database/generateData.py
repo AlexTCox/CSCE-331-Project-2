@@ -50,11 +50,11 @@ else:
 peakDayOne = datetime.datetime(2023,5,5)
 peakDayTWo = datetime.datetime(2023,7,4)
 
-
+order_id = 1
 
 oldDate = datetime.datetime(2023,2,22)
 # The dates for the data:
-for i in range(365):
+for i in range(1):
     currentDate = (oldDate + timedelta(i)).strftime("%Y-%m-%d")
 
     peopleRand = random.randint(0,100)
@@ -68,7 +68,7 @@ for i in range(365):
     elif peopleRand > 75 and peopleRand <= 89:
         peopleAmount = 275
     else:
-        peoplemount = 300
+        peopleAmount = 300
 
     # The amount of orders in a day:
     for j in range(peopleAmount):
@@ -119,7 +119,7 @@ for i in range(365):
         #ID is i+j
         #Operator id is operatorRand
         #Date of sale is currentDate
-        order_id = i + j
+        
 
         # Creating the junction table for drinkAmount
         def rand_drink():
@@ -127,7 +127,7 @@ for i in range(365):
             return drink
 
         def insert_order(order_id, drink):
-            with open('./csv/drink_order.csv', 'a', newline='') as csvfile:
+            with open('drink_order.csv', 'a', newline='') as csvfile:
                 fieldnames = ['order_id', 'drink_id']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 
@@ -143,7 +143,7 @@ for i in range(365):
             return random.randint(1, 20)  # Generates a random menu item ID between 1 and 20 (inclusive)
 
         def insert_menu_item(order_id, menu_item):
-            with open('./csv/menu_order.csv', 'a', newline='') as csvfile:
+            with open('menu_order.csv', 'a', newline='') as csvfile:
                 fieldnames = ['order_id', 'menu_item_id']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 
@@ -159,7 +159,7 @@ for i in range(365):
             return random.randint(1, 22)  # Generates a random addon ID between 1 and 22 (inclusive)
 
         def insert_addon(order_id, addon):
-            with open('./csv/add_on_order.csv', 'a', newline='') as csvfile:
+            with open('add_on_order.csv', 'a', newline='') as csvfile:
                 fieldnames = ['order_id', 'addon_id']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 
@@ -183,33 +183,37 @@ for i in range(365):
             total_cost = 0.0
             
             # Look into the junction table for menu items
-            with open('./csv/menu_order.csv', 'r') as csvfile:
+            with open('menu_order.csv', 'r') as csvfile:
                 reader = csv.DictReader(csvfile)
+                next(reader)
                 for row in reader:
                     if int(row['order_id']) == order_id:
                         menu_item_id = int(row['menu_item_id'])
-                        price = get_price(menu_item_id, './csv/menu.csv')
+                        price = get_price(menu_item_id, 'menu.csv')
                         if price:
                             total_cost += price
             
             # Look into the junction table for drinks
-            with open('./csv/drink_order.csv', 'r') as csvfile:
+            with open('drink_order.csv', 'r') as csvfile:
                 reader = csv.DictReader(csvfile)
+                next(reader)
                 for row in reader:
-                    if int(row['order_id']) == order_id:
+                    if row['order_id'] == order_id:
                         drink_id = int(row['drink_id'])
-                        price = get_price(drink_id, './csv/drink.csv')
+                        price = get_price(drink_id, 'drink.csv')
                         if price:
                             total_cost += price
             
             # Look into the junction table for addons
-            with open('./csv/addon_order.csv', 'r') as csvfile:
+            with open('add_on_order.csv', 'r') as csvfile:
                 reader = csv.DictReader(csvfile)
+                next(reader)
                 for row in reader:
                     if int(row['order_id']) == order_id:
                         addon_id = int(row['addon_id'])
-                        price = get_price(addon_id, './csv/addon.csv')
+                        price = get_price(addon_id, 'addon.csv')
                         if price:
                             total_cost += price
             
             return total_cost
+        order_id = order_id + 1
