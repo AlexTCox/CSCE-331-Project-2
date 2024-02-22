@@ -18,37 +18,13 @@ cur = conn.cursor()
 
 # Removing all the tables:
 cur.execute (
-    """DROP TABLE add_on_order"""
-)
-
-conn.commit()
-
-cur.execute (
-    """DROP TABLE customer_order"""
-)
-
-conn.commit()
-
-cur.execute (
     """DROP TABLE drink_order"""
 )
 
 conn.commit()
 
 cur.execute (
-    """DROP TABLE drinks"""
-)
-
-conn.commit()
-
-cur.execute (
-    """DROP TABLE ingredients"""
-)
-
-conn.commit()
-
-cur.execute (
-    """DROP TABLE menu_item"""
+    """DROP TABLE add_on_order"""
 )
 
 conn.commit()
@@ -66,7 +42,31 @@ cur.execute (
 conn.commit()
 
 cur.execute (
+    """DROP TABLE customer_order"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE ingredients"""
+)
+
+conn.commit()
+
+cur.execute (
     """DROP TABLE operator"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE menu_item"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE drinks"""
 )
 
 conn.commit()
