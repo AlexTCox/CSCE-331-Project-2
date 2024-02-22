@@ -156,7 +156,7 @@ for i in range(1):
 
         # Creating the junction table entries for add_ons:
         def rand_addon():
-            return random.randint(1, 22)  # Generates a random addon ID between 1 and 22 (inclusive)
+            return random.randint(1, 14)  # Generates a random addon ID between 1 and 22 (inclusive)
 
         def insert_addon(order_id, addon):
             with open('add_on_order.csv', 'a', newline='') as csvfile:
