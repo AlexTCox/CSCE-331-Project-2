@@ -1,5 +1,6 @@
 import psycopg2
 
+# Connecting to database:
 conn = psycopg2.connect(
     database = "csce331_550_01_db",
     user = "csce331_550_01_user",
@@ -8,8 +9,10 @@ conn = psycopg2.connect(
     port = 5432
 )
 
+# How we will execute SQL commands:
 cur = conn.cursor()
 
+# Inserting menu items into the menu_item table
 cur.execute(
     """
     INSERT INTO menu_item (name, price)
@@ -36,7 +39,7 @@ cur.execute(
     ('Cuttin Catctus Taco', 2.5);
     """
 )
-
+# Inserting ingredients into the ingredients table
 cur.execute(
     """
     INSERT INTO ingredients (name, stock, add_on_price, min_stock)
@@ -75,8 +78,10 @@ cur.execute(
         ('jalapeno',100,2,10);
     """
 )
+# Commit changes to the database
 conn.commit()
 
+# Associating menu items with ingredients in the menu_item_ingredient table
 cur.execute(
     """
 INSERT INTO menu_item_ingredient (menu_id, ingredient_id)
@@ -104,8 +109,9 @@ INSERT INTO menu_item_ingredient (menu_id, ingredient_id)
     """
 )
 
-
+# Commit changes again
 conn.commit()
 
+# Close cursor and connection
 cur.close()
 conn.close()
