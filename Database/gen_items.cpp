@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
-enum ingredient {
+
+// Define enum for ingredients
+enum ingredient
+{
     zero,
     lettuce,
     cheese,
@@ -36,8 +39,10 @@ enum ingredient {
     jalapeno
 };
 
+int main()
+{
 
-int main() {
+    // Create a vector of vectors to represent menu items and their ingredients
     std::vector<std::vector<int>> x;
     x.push_back(std::vector<int>{chicken, sour_cream, tomato, cheese});
     x.push_back(std::vector<int>{camel, guacamole, tomato});
@@ -60,16 +65,23 @@ int main() {
     x.push_back(std::vector<int>{jaguar, hot_sauce, cheese, lettuce});
     x.push_back(std::vector<int>{cactus, onion, lettuce});
 
+    // Print SQL-like insert statements to associate each menu item with its ingredients
     std::cout << "INSERT INTO menu_item_ingredient (menu_id, ingredient_id)";
     std::cout << "\n VALUES ";
 
     int id = 1;
-    for (std::vector<int> item : x) {
+    for (std::vector<int> item : x)
+    {
+        // Move to the next line for the next menu item
         std::cout << "\n";
-        for(int ingredient_id : item) {
+
+        for (int ingredient_id : item)
+        {
+            // Print the menu ID and ingredient ID for each ingredient in menu item
             std::cout << "(" << id << ", " << ingredient_id << "), ";
         }
+
         id++;
     }
-    
+    return 0;
 };
