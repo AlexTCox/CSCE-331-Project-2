@@ -16,6 +16,66 @@ conn = psycopg2.connect(
 # How we will execute SQL commands:
 cur = conn.cursor()
 
+# Removing all the tables:
+cur.execute (
+    """DROP TABLE add_on_order"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE customer_order"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE drink_order"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE drinks"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE ingredients"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE menu_item"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE menu_item_ingredient"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE menu_order"""
+)
+
+conn.commit()
+
+cur.execute (
+    """DROP TABLE operator"""
+)
+
+conn.commit()
+
+
+
+
+
+
 # Menu_Item table:
 cur.execute (
     """CREATE TABLE menu_item (
@@ -99,7 +159,7 @@ conn.commit()
 
 # menu item and ingredient table:
 cur.execute (
-    """CREATE TABLE menuitem_ingredient (
+    """CREATE TABLE menu_item_ingredient (
     id serial primary key,
     menu_id serial,
     ingredient_id serial,
