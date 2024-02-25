@@ -35,7 +35,7 @@ UPDATE customer_order set cost = (
     -- How it decides which values to change: 
 ) WHERE customer_order.id in (SELECT id FROM customer_order WHERE cost IS NULL LIMIT 10000);
 
--- Added indexs to speed it up:
+-- Added indexes which make a hash_table of whatever is specified which speeds up the process like crazy:
 -- CREATE INDEX menu_order_order_id_idx ON menu_order (customer_order_id);
 -- CREATE INDEX menu_order_menu_order_id_idx ON menu_order (menu_item_id);
 -- CREATE INDEX drink_order_order_id_idx ON drink_order (customer_order_id);
