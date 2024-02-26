@@ -2,7 +2,7 @@
 SELECT ij.name AS item_name, COUNT(*) AS total_items
 FROM menu_item_ingredient as i
 INNER JOIN menu_item AS ij on i.menu_id = ij.id
-GROUP BY ij.name
+GROUP BY ij.name;
 
 
 
