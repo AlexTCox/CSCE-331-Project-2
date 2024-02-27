@@ -1,3 +1,5 @@
 Update Database Design Document
-Finish Queries
-Finish Order Generatiom
+Work on GUI
+Connection from front end to database
+    -Make functions for front-end to call
+Main queries are complete but feel free to make some differnt ones
