@@ -16,7 +16,7 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
             <Text layoutX="56.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Category to Update" wrappingWidth="142.193359375" />
-            <ScrollPane layoutX="27.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0">
+            <ScrollPane fx:id="ingredientPane" layoutX="27.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -31,7 +31,7 @@
             <VBox layoutX="299.0" layoutY="117.0" prefHeight="200.0" prefWidth="275.0">
                <children>
                   <TextField fx:id="stockField" promptText="stock amount. ie 200" visible="false" />
-                  <Button id="stockSetBtn" fx:id="stockSetBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="296.0" text="Set Stock" visible="false" />
+                  <Button id="stockSetBtn" fx:id="stockSetBtn" mnemonicParsing="false" onAction="#stockBtnAction" prefHeight="25.0" prefWidth="296.0" text="Set Stock" visible="false" />
                   <TextField fx:id="pricField" visible="false" />
                   <Button fx:id="priceButton" mnemonicParsing="false" onAction="#priceButtonAction" prefHeight="25.0" prefWidth="386.0" text="Set Price" visible="false" />
                   <GridPane>

@@ -17,12 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Handler;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 public class PrimaryController implements Initializable {
 
@@ -48,7 +43,7 @@ public class PrimaryController implements Initializable {
 
     @FXML
 
-    //action hangler for changing stock
+    //this just opens the second window to edit stuff
     void stockBtnAction(ActionEvent event){
         try{
             Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));
@@ -64,13 +59,16 @@ public class PrimaryController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //need to securely do this
         String dbUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
         String user = "csce331_550_01_user";
         String password = "cSCUE8w9";
 
+            //hold the name and quanity of items
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
+        //general queries to populate
         String queryIngredients = "SELECT * FROM ingredients;";
         String queryMenu = "SELECT * FROM menu_Item;";
         String queryDrinks = "SELECT * FROM drinks;";
@@ -129,11 +127,12 @@ public class PrimaryController implements Initializable {
 
         }
     }
-
+    //when diselected item is removed from table view
     private void removeItemFromTableView(String itemName) {
         tableView.getItems().removeIf(item -> item.getName().equals(itemName));
     }
 
+    //adds the items to the table
     private void populateTableView(String tableName, String itemName) {
         String columnName = "name";
         if ("drinks".equals(tableName)) {
