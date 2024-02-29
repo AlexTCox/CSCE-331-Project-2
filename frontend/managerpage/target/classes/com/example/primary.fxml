@@ -2,30 +2,71 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-
-    <VBox fx:id="checkBoxContainer" prefHeight="398.0" prefWidth="182.0">
-
-        <children>
-            <Accordion>
-                <panes>
-                    <TitledPane animated="false" text="Ingredients">
-                        <content>
-                            <ScrollPane prefHeight="182.0" prefWidth="175.0">
+<SplitPane dividerPositions="0.40468227424749165" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <Accordion layoutX="14.0" layoutY="14.0">
+              <panes>
+                <TitledPane fx:id="IngredientsTab" animated="false" text="Ingredients">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane layoutX="-1.0" prefHeight="180.0" prefWidth="202.0">
                                 <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="185.0">
+                                       <children>
+                                          <VBox fx:id="vboxIngredients" prefHeight="200.0" prefWidth="188.0" />
+                                       </children>
+                                    </AnchorPane>
                                 </content>
-                            </ScrollPane>
-                        </content>
-                    </TitledPane>
-                </panes>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" prefHeight="206.0" prefWidth="165.0" text="Menu Items">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane layoutX="-2.0" layoutY="2.0" prefHeight="200.0" prefWidth="202.0">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox fx:id="vboxMenuItem" layoutY="6.0" prefHeight="200.0" prefWidth="202.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Drinks">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane layoutY="8.0" prefHeight="174.0" prefWidth="200.0">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox fx:id="vboxDrink" prefHeight="161.0" prefWidth="178.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
             </Accordion>
-        </children>
-
-    </VBox>
-
-</AnchorPane>
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+  </items>
+</SplitPane>
