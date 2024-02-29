@@ -2,18 +2,27 @@ package com.example;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Handler;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class PrimaryController implements Initializable {
 
@@ -29,13 +38,28 @@ public class PrimaryController implements Initializable {
     private TableColumn<DataItem, String> nameColumn;
     @FXML
     private TableColumn<DataItem, Integer> quantityColumn;
+    @FXML
+    private Button stockBtn;
+
 
     private static Connection connection;
     private static Statement statement;
     private static ResultSet resultSet;
 
-    public void onSelect(ActionEvent e){
-        
+    @FXML
+
+    //action hangler for changing stock
+    void stockBtnAction(ActionEvent event){
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+            
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -50,9 +74,8 @@ public class PrimaryController implements Initializable {
         String queryIngredients = "SELECT * FROM ingredients;";
         String queryMenu = "SELECT * FROM menu_Item;";
         String queryDrinks = "SELECT * FROM drinks;";
-        List<CheckBox> ingredientsList = new ArrayList<>();
-        List<CheckBox> menuList = new ArrayList<>();
-        List<CheckBox> drinkList = new ArrayList<>();
+
+
 
         try {
             //ingredient population
@@ -70,30 +93,35 @@ public class PrimaryController implements Initializable {
                     } });
                 vboxIngredients.getChildren().add(checkBox);
             }
-            // vboxIngredients.getChildren().clear();
-            // vboxIngredients.getChildren().addAll(ingredientsList);
 
             //menu population
             resultSet = statement.executeQuery(queryMenu);
             while (resultSet.next()) {
                 String menuItem = resultSet.getString("name");
                 CheckBox checkBox = new CheckBox(menuItem);
-                checkBox.setOnAction(event -> populateTableView("menu_item", menuItem) );
+                checkBox.setOnAction(event -> {
+                    if(checkBox.isSelected()){
+                        populateTableView("menu_item", menuItem);
+                    }else{
+                        removeItemFromTableView(menuItem);
+                    } });
                 vboxMenuItem.getChildren().add(checkBox);
             }
-            // vboxMenuItem.getChildren().clear();
-            // vboxMenuItem.getChildren().addAll(menuList);
 
             //drink population
             resultSet = statement.executeQuery(queryDrinks);
             while (resultSet.next()) {
                 String drink = resultSet.getString("size");
                 CheckBox checkBox = new CheckBox(drink);
-                checkBox.setOnAction(event -> populateTableView("drinks", drink) );
+                checkBox.setOnAction(event -> {
+                    if(checkBox.isSelected()){
+                        populateTableView("drinks", drink);
+                    }else{
+                        removeItemFromTableView(drink);
+                    } });
                 vboxDrink.getChildren().add(checkBox);
             }
-            // vboxDrink.getChildren().clear();
-            // vboxDrink.getChildren().addAll(drinkList);
+
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -107,17 +135,28 @@ public class PrimaryController implements Initializable {
     }
 
     private void populateTableView(String tableName, String itemName) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE name = ?")) {
+        String columnName = "name";
+        if ("drinks".equals(tableName)) {
+            columnName = "size";
+        }
+    
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + " = ?")) {
             preparedStatement.setString(1, itemName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     int quantity;
-                    String name = resultSet.getString("name");
-                    if(tableName == "ingredients"){
+                    String name;
+                    if("drinks".equals(tableName)){
+                        name = resultSet.getString("size");
+                    }else{
+                        name = resultSet.getString("name");
+                    }
+                    if("ingredients".equals(tableName)){
                         quantity = resultSet.getInt("stock");
                     }else{
-                        quantity = resultSet.getInt("price");
+                        quantity=resultSet.getInt("price");
                     }
+                    
                     tableView.getItems().add(new DataItem(name, quantity));
                 }
             }
