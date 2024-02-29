@@ -28,8 +28,8 @@ public class LogIn {
     public void checkLogin() throws IOException
     {
         Main m = new Main();
-        String username = name.getText().toString();
-        String spassword = passkey.getText().toString();
+        String username = name.getText();
+        String spassword = passkey.getText();
         int password = Integer.parseInt(spassword);
 
         if(username.equals("raghav") &&  password==123)
