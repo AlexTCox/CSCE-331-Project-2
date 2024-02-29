@@ -28,7 +28,11 @@ public class LogIn {
     public void checkLogin() throws IOException
     {
         Main m = new Main();
-        if(name.getText().toString().equals("raghav") && passkey.getText().toString().equals("123"))
+        String username = name.getText().toString();
+        String spassword = passkey.getText().toString();
+        int password = Integer.parseInt(spassword);
+
+        if(username.equals("raghav") &&  password==123)
         {
               wronglogin.setText("Success!");
               m.changeScene("afterLogin.fxml");
