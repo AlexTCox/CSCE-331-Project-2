@@ -32,9 +32,11 @@ public class PrimaryController implements Initializable {
     @FXML
     private TableColumn<DataItem, String> nameColumn;
     @FXML
-    private TableColumn<DataItem, Integer> quantityColumn;
+    private TableColumn<DataItem, Integer> stockColumn;
     @FXML
     private Button stockBtn;
+    @FXML
+    private TableColumn<DataItem, Integer> priceColumn;
 
 
     private static Connection connection;
@@ -66,7 +68,8 @@ public class PrimaryController implements Initializable {
 
             //hold the name and quanity of items
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         //general queries to populate
         String queryIngredients = "SELECT * FROM ingredients;";
@@ -135,8 +138,12 @@ public class PrimaryController implements Initializable {
     //adds the items to the table
     private void populateTableView(String tableName, String itemName) {
         String columnName = "name";
+        String priceName = "price";
         if ("drinks".equals(tableName)) {
             columnName = "size";
+        }
+        if("ingredients".equals(tableName)){
+            priceName = "add_on_price";
         }
     
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + " = ?")) {
@@ -145,39 +152,48 @@ public class PrimaryController implements Initializable {
                 while (resultSet.next()) {
                     int quantity;
                     String name;
+                    String stock;
                     if("drinks".equals(tableName)){
                         name = resultSet.getString("size");
+                        stock = "N/A";
                     }else{
                         name = resultSet.getString("name");
+                        if("ingredients".equals(tableName)){
+                            stock = String.valueOf(resultSet.getInt("stock"));
+                        }else{
+                            stock = "N/A";
+                        }
                     }
-                    if("ingredients".equals(tableName)){
-                        quantity = resultSet.getInt("stock");
-                    }else{
-                        quantity=resultSet.getInt("price");
-                    }
+                    quantity=resultSet.getInt(priceName);
                     
-                    tableView.getItems().add(new DataItem(name, quantity));
+                    tableView.getItems().add(new DataItem(name, quantity, stock));
                 }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-        public static class DataItem {
+    public static class DataItem {
         private final String name;
-        private final int quantity;
-
-        public DataItem(String name, int quantity) {
+        private final int price;
+        private final String stock;
+    
+        public DataItem(String name, int price, String stock) {
             this.name = name;
-            this.quantity = quantity;
+            this.price = price;
+            this.stock = stock;
         }
-
+    
         public String getName() {
             return name;
         }
-
-        public int getQuantity() {
-            return quantity;
+    
+        public int getPrice() {
+            return price;
+        }
+    
+        public String getStock() {
+            return stock;
         }
     }
 }

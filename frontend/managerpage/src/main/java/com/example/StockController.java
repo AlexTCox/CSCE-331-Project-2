@@ -1,6 +1,7 @@
 package com.example;
 
 import java.net.URL;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 
 
@@ -25,13 +27,17 @@ public class StockController implements Initializable{
 
     // main area for fxID declarations
     @FXML
+    private TextField ingredientsField;
+    @FXML
     private VBox tableItems;
+    @FXML
+    private Button exiButton;
     @FXML
     private TextField stockField;
     @FXML
     private Button stockSetBtn;
     @FXML
-    private TextField pricField;
+    private TextField priceField;
     @FXML
     private Button priceButton;
     @FXML
@@ -65,12 +71,13 @@ public class StockController implements Initializable{
         category = "ingredients";
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
-        pricField.setVisible(false);
+        priceField.setVisible(false);
         priceButton.setVisible(false);
+        ingredientsField.setVisible(false);
         setFieldsVisibility(true, true, true, true, true);
         String query = "SELECT * FROM ingredients;";
         populateVBoxWithQueryResults(query, true);
-        
+        ingredientPane.setContent(tableItems);
         // ingredientPane.setFitToHeight(true);
         // ingredientPane.setFitToWidth(true);
 
@@ -82,8 +89,9 @@ public class StockController implements Initializable{
         category = "menu_item";
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
-        pricField.setVisible(false);
+        priceField.setVisible(false);
         priceButton.setVisible(false);
+        ingredientsField.setVisible(true);
         String query = "SELECT * FROM menu_Item;";
         setFieldsVisibility(true, true, false, false, true);
         populateVBoxWithQueryResults(query, false);
@@ -100,8 +108,9 @@ public class StockController implements Initializable{
         category = "drinks";
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
-        pricField.setVisible(false);
+        priceField.setVisible(false);
         priceButton.setVisible(false);
+        ingredientsField.setVisible(false);
         setFieldsVisibility(true, true, false, false, true);
         tableItems.getChildren().clear();
         ToggleGroup group = new ToggleGroup();
@@ -116,9 +125,10 @@ public class StockController implements Initializable{
                 radioButton.setToggleGroup(group);
                 radioButton.setOnAction(e -> {
                     priceButton.setVisible(true);
-                    pricField.setVisible(true);
+                    priceField.setVisible(true);
                     stockField.setVisible(false);
                     stockSetBtn.setVisible(false);
+                    ingredientsField.setVisible(false);
                     setFieldsVisibility(false, false, false, false, false);
                 });
                 tableItems.getChildren().add(radioButton);
@@ -149,14 +159,16 @@ public class StockController implements Initializable{
                 radioButton.setOnAction(event -> {
                     if(ingredient){
                         priceButton.setVisible(true);
-                        pricField.setVisible(true);
+                        priceField.setVisible(true);
                         stockField.setVisible(true);
                         stockSetBtn.setVisible(true);
+                        ingredientsField.setVisible(false);
                     }else{
                         priceButton.setVisible(true);
-                        pricField.setVisible(true);
+                        priceField.setVisible(true);
                         stockField.setVisible(false);
                         stockSetBtn.setVisible(false);
+                        ingredientsField.setVisible(false);
                     }
                     setFieldsVisibility(false, false, false, false, false);
 
@@ -206,7 +218,7 @@ private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, bool
         
         if (selectedRadioButton != null) {
             String itemName = selectedRadioButton.getText();
-            String priceText = pricField.getText();
+            String priceText = priceField.getText();
             String priceName = "price";
             if (!priceText.isEmpty()) {
                 try {
@@ -252,7 +264,7 @@ private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, bool
                     String itemName = selectedRadioButton.getText();
                     int newStock = Integer.parseInt(stockField.getText());
                     try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
-                         PreparedStatement statement = connection.prepareStatement("UPDATE ingredients SET stock = ? WHERE name = ?")) {
+                        PreparedStatement statement = connection.prepareStatement("UPDATE ingredients SET stock = ? WHERE name = ?")) {
                         statement.setDouble(1, newStock);
                         statement.setString(2, itemName);
                         int rowsAffected = statement.executeUpdate();
@@ -275,11 +287,63 @@ private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, bool
             System.out.println("Please select a menu item.");
         }
     }
-    void newItemBtn(ActionEvent evvent){
-        if(category == "menu_item"){
-
-        }
+    @FXML
+    void onExitBtn(ActionEvent event){
+        Stage stage = (Stage) exiButton.getScene().getWindow();
+        stage.close();
     }
+    @FXML
+void newItemBtn(ActionEvent event){
+    String stockText = newStockTextField.getText();
+    String nameText = nameTextField.getText();
+    String priceText = priceTextField.getText();
+    String minStockText = minStockTextField.getText();
+    String ingredientsText = ingredientsField.getText();
+    
+
+    try(Connection connection = DriverManager.getConnection(dbUrl, user, password)) {
+        PreparedStatement statement;
+        switch (category) {
+            case "ingredients":
+                int newStock = Integer.parseInt(stockText);
+                double newPrice = Double.parseDouble(priceText);
+                int newMinStock = Integer.parseInt(minStockText);
+                statement = connection.prepareStatement("INSERT INTO ingredients (name, stock, add_on_price, min_stock) VALUES (?, ?, ?, ?)");
+                statement.setString(1, nameText);
+                statement.setInt(2, newStock);
+                statement.setDouble(3, newPrice);
+                statement.setInt(4, newMinStock);
+                break;
+            case "menu_item": // TODO make this function add ingredients as well
+                String[] ingredients = ingredientsText.split(",");
+                double menuItemPrice = Double.parseDouble(priceText);
+                statement = connection.prepareStatement(""); // function call here
+
+                break;
+            case "drinks":
+                String size = nameText;
+                double drinkPrice = Double.parseDouble(priceText);
+                statement = connection.prepareStatement("INSERT INTO drinks (size, price) VALUES (?, ?)");
+                statement.setString(1, size);
+                statement.setDouble(2, drinkPrice);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid category: " + category);
+        }
+
+        int rowsAffected = statement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Item added successfully.");
+        } else {
+            System.out.println("Failed to add item.");
+        }
+        clearFields();
+    } catch (SQLException ex) {
+        System.out.println("Error adding item: " + ex.getMessage());
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid number format.");
+    }
+}
 //general initialize. most likley wont use here
 @Override
 public void initialize(URL url, ResourceBundle resourceBundle) {
