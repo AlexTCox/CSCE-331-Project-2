@@ -39,6 +39,9 @@ public class LogIn {
         // Initializing a boolean variable to track user authentication result
         Boolean user_result = false;
 
+        // Initializing a boolean variable to track adim authentication result
+        Boolean admin_result = false;
+
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
 
@@ -52,9 +55,18 @@ public class LogIn {
             user_cstmt.setString(2, user_name);
             user_cstmt.setInt(3, user_password);
             user_cstmt.execute();
-
             // Retrieving the result from the output parameter
             user_result = user_cstmt.getBoolean(1);
+
+            // Defining a SQL query to call a stored function with an output parameter
+            String admin_query = "{ ? = call check_admin(?) }";
+            CallableStatement admin_cstmt = connection.prepareCall(admin_query);
+            admin_cstmt.registerOutParameter(1, Types.BOOLEAN);
+            // Setting the input parameters of the function
+            admin_cstmt.setString(2, user_name);
+            admin_cstmt.execute();
+            // Retrieving the result from the output parameter
+            admin_result = admin_cstmt.getBoolean(1);
         }
         catch (SQLException ex)
         {
@@ -63,28 +75,10 @@ public class LogIn {
 
         // Creating an instance of the Main class
         Main m = new Main();
-        // Initializing a boolean variable to track adim authentication result
-        Boolean admin_result = false;
 
         // Checking if user authentication was successful
          if(user_result){
              wronglogin.setText("Success!");
-             try
-             {
-                 Connection connection = DriverManager.getConnection(url, user, password);
-                 String admin_query = "{ ? = call check_admin(?) }";
-                 CallableStatement admin_cstmt = connection.prepareCall(admin_query);
-                 admin_cstmt.registerOutParameter(1, Types.BOOLEAN);
-                 // Setting the input parameters of the function
-                 admin_cstmt.setString(2, user_name);
-                 admin_cstmt.execute();
-                 // Retrieving the result from the output parameter
-                 admin_result = admin_cstmt.getBoolean(1);
-             }
-             catch (SQLException ex)
-             {
-                 ex.printStackTrace();
-             }
 
              // Checking if the user is an admin
              if(admin_result)
