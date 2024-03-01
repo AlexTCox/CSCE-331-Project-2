@@ -1,4 +1,4 @@
-CREATE FUNCTION finding_cost()
+CREATE FUNCTION finding_cost_10000()
 RETURNS void AS $$
 BEGIN
 
