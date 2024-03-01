@@ -1,0 +1,11 @@
+#backgroundPane{
+    -fx-background-color: #813ab3;
+    -fx-alignment: center;
+    justify-content: center;
+}
+.mainItems{
+    color: aliceblue;
+}
+#checkboxContainer{
+    
+}
