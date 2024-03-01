@@ -25,5 +25,7 @@
       <Button layoutX="356.0" layoutY="304.0" mnemonicParsing="false" onAction="#ClearOrder" text="Clear Order" />
       <Button layoutX="224.0" layoutY="40.0" mnemonicParsing="false" onAction="#Drink_Query" text="Drinks" />
       <Button layoutX="468.0" layoutY="304.0" mnemonicParsing="false" onAction="#SubmitOrder" text="Submit Order" />
+      <Label fx:id="myLabel1" layoutX="281.0" layoutY="336.0" text="Label" />
+      <Button layoutX="165.0" layoutY="341.0" mnemonicParsing="false" onAction="#showOrderID" text="Button" />
    </children>
 </AnchorPane>

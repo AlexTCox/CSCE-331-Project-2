@@ -180,6 +180,37 @@ public class HelloController implements Initializable{
         String user = "csce331_550_01_user";
         String password = "cSCUE8w9";
 
+        String query = "SELECT NEW_ORDER(" + operatorID + ")";
+        List<Integer> orderIDList = new ArrayList<>();
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                orderID = resultSet.getInt("new_order");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }
+
+        myListView.getItems().clear();
+        priceList.clear();
+        menuList.clear();
+        addonList.clear();
+        drinkList.clear();
+
+        price = 0;
+        myLabel.setText("Order: $" + price);
+
+        index = 0;
+
+
         try {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
@@ -202,28 +233,7 @@ public class HelloController implements Initializable{
             compOrder.setArray(3, drinkArray);
             compOrder.setArray(4, addonArray);
 
-            compOrder.executeUpdate();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
-
-
-
-        String query = "SELECT NEW_ORDER(" + operatorID + ")";
-        List<Integer> orderIDList = new ArrayList<>();
-
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                orderIDTemp = resultSet.getInt("new_order");
-            }
+            compOrder.execute();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -265,6 +275,13 @@ public class HelloController implements Initializable{
 
     @FXML
     private Label myLabel;
+    @FXML
+    private Label myLabel1;
+    public void showOrderID(ActionEvent e) {
+        myLabel1.setText("ID: " + orderID);
+    }
+
+
     @FXML
     private ListView<String> myListView;
     private double price = 0;
@@ -375,38 +392,6 @@ public class HelloController implements Initializable{
             hboxx_menu.getChildren().clear();
             hboxx_menu.getChildren().addAll(buttonlist);
             i = 0;
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-
-        query = "SELECT NEW_ORDER(" + operatorID + ")";
-        List<Integer> orderIDList = new ArrayList<>();
-
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                orderIDTemp = resultSet.getInt("new_order");
-            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
