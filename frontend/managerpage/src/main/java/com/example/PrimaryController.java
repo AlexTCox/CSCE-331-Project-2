@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
+import javafx.scene.Node;
 
 public class PrimaryController implements Initializable {
 
@@ -57,6 +58,14 @@ public class PrimaryController implements Initializable {
         }catch(IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void changeScene(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));            Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override
@@ -150,7 +159,7 @@ public class PrimaryController implements Initializable {
             preparedStatement.setString(1, itemName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    int quantity;
+                    double quantity;
                     String name;
                     String stock;
                     if("drinks".equals(tableName)){
@@ -164,7 +173,7 @@ public class PrimaryController implements Initializable {
                             stock = "N/A";
                         }
                     }
-                    quantity=resultSet.getInt(priceName);
+                    quantity=resultSet.getDouble(priceName);
                     
                     tableView.getItems().add(new DataItem(name, quantity, stock));
                 }
@@ -175,10 +184,10 @@ public class PrimaryController implements Initializable {
     }
     public static class DataItem {
         private final String name;
-        private final int price;
+        private final double price;
         private final String stock;
     
-        public DataItem(String name, int price, String stock) {
+        public DataItem(String name, double price, String stock) {
             this.name = name;
             this.price = price;
             this.stock = stock;
@@ -188,7 +197,7 @@ public class PrimaryController implements Initializable {
             return name;
         }
     
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
     

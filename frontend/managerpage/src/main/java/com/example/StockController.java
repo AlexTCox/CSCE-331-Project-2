@@ -1,7 +1,7 @@
 package com.example;
 
+import java.io.IOException;
 import java.net.URL;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,7 +12,11 @@ import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -68,6 +72,7 @@ public class StockController implements Initializable{
     //controls what fields are visable when igredients category is open
     @FXML
     void btnActionIngredients(ActionEvent event){
+
         category = "ingredients";
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
@@ -78,14 +83,22 @@ public class StockController implements Initializable{
         String query = "SELECT * FROM ingredients;";
         populateVBoxWithQueryResults(query, true);
         ingredientPane.setContent(tableItems);
-        // ingredientPane.setFitToHeight(true);
-        // ingredientPane.setFitToWidth(true);
 
+    }
+    @FXML
+    public void changeScene(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("primary.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
     //controls what fields are visable when menu category is open
     @FXML
     void btnActionInMenu(ActionEvent event){
+
         category = "menu_item";
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
@@ -95,14 +108,11 @@ public class StockController implements Initializable{
         String query = "SELECT * FROM menu_Item;";
         setFieldsVisibility(true, true, false, false, true);
         populateVBoxWithQueryResults(query, false);
-       
-        // ingredientPane.setFitToHeight(true);
-        // ingredientPane.setFitToWidth(true);
 
     }
 
     //controls what fields are visable when drink category is open and populates the drink box
-    // most moranic way possible to do this but didnt want to have to add another variable to function
+    // dumbest way possible to do this but didnt want to have to add another variable to function
     @FXML
     void btnActionInDrink(ActionEvent event){
         category = "drinks";
@@ -180,7 +190,7 @@ public class StockController implements Initializable{
         }
     }
     //oop needed to condense the amount of times i did this
-private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, boolean newStockVisible,
+    private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, boolean newStockVisible,
                                      boolean minStockVisible, boolean submitVisible) {
         nameTextField.setVisible(nameVisible);
         priceTextField.setVisible(priceVisible);
@@ -287,18 +297,18 @@ private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, bool
             System.out.println("Please select a menu item.");
         }
     }
+    // @FXML
+    // void onExitBtn(ActionEvent event){
+    //     Stage stage = (Stage) exiButton.getScene().getWindow();
+    //     stage.close();
+    // }
     @FXML
-    void onExitBtn(ActionEvent event){
-        Stage stage = (Stage) exiButton.getScene().getWindow();
-        stage.close();
-    }
-    @FXML
-void newItemBtn(ActionEvent event){
-    String stockText = newStockTextField.getText();
-    String nameText = nameTextField.getText();
-    String priceText = priceTextField.getText();
-    String minStockText = minStockTextField.getText();
-    String ingredientsText = ingredientsField.getText();
+    void newItemBtn(ActionEvent event){
+        String stockText = newStockTextField.getText();
+        String nameText = nameTextField.getText();
+        String priceText = priceTextField.getText();
+        String minStockText = minStockTextField.getText();
+        String ingredientsText = ingredientsField.getText();
     
 
     try(Connection connection = DriverManager.getConnection(dbUrl, user, password)) {

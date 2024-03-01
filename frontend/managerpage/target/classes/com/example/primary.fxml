@@ -21,15 +21,15 @@
          <children>
             <Accordion layoutX="14.0" layoutY="14.0" prefHeight="200.0">
               <panes>
-                <TitledPane fx:id="IngredientsTab" animated="false" prefHeight="200.0" prefWidth="200.0" text="Ingredients">
+                <TitledPane fx:id="IngredientsTab" animated="false" prefWidth="200.0" text="Ingredients">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ScrollPane layoutX="-1.0" prefHeight="200.0" prefWidth="200.0">
+                              <ScrollPane prefHeight="125.0" prefWidth="200.0">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="185.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                        <children>
-                                          <VBox fx:id="vboxIngredients" prefHeight="200.0" prefWidth="188.0" />
+                                          <VBox fx:id="vboxIngredients" prefWidth="188.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -38,15 +38,15 @@
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Menu Items">
+                <TitledPane animated="false" prefWidth="200.0" text="Menu Items">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <ScrollPane layoutX="-2.0" layoutY="2.0" prefHeight="200.0" prefWidth="202.0">
+                              <ScrollPane layoutX="-2.0" layoutY="2.0" prefHeight="124.0" prefWidth="202.0">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                        <children>
-                                          <VBox fx:id="vboxMenuItem" layoutY="6.0" prefHeight="200.0" prefWidth="202.0" />
+                                          <VBox fx:id="vboxMenuItem" layoutY="6.0" prefWidth="202.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -55,15 +55,15 @@
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane animated="false" prefHeight="200.0" prefWidth="200.0" text="Drinks">
+                <TitledPane animated="false" prefWidth="200.0" text="Drinks">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ScrollPane layoutX="-1.0" prefHeight="175.0" prefWidth="200.0">
+                              <ScrollPane layoutX="-1.0" prefHeight="123.0" prefWidth="200.0">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                        <children>
-                                          <VBox fx:id="vboxDrink" prefHeight="160.0" prefWidth="200.0" />
+                                          <VBox fx:id="vboxDrink" prefWidth="200.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -74,7 +74,8 @@
                 </TitledPane>
               </panes>
             </Accordion>
-            <Button fx:id="stockBtn" layoutX="20.0" layoutY="292.0" mnemonicParsing="false" onAction="#stockBtnAction" prefHeight="52.0" prefWidth="200.0" text="Update and Add Items" />
+            <Button fx:id="stockBtn" layoutX="20.0" layoutY="267.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="52.0" prefWidth="200.0" text="Update and Add Items" />
+            <Button fx:id="logOut" layoutX="20.0" layoutY="332.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="200.0" text="LogOUt" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
@@ -85,7 +86,7 @@
                 <TableColumn fx:id="priceColumn" prefWidth="75.0" text="Price" />
               </columns>
             </TableView>
-            <LineChart layoutX="124.0" layoutY="14.0" prefHeight="135.0" prefWidth="169.0">
+            <LineChart layoutX="107.0" layoutY="3.0" prefHeight="180.0" prefWidth="239.0">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -93,9 +94,10 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <Line endX="6.0" endY="-71.0" layoutX="54.0" layoutY="148.0" startX="6.0" startY="-20.0" />
-            <TextField layoutX="14.0" layoutY="113.0" prefHeight="25.0" prefWidth="91.0" />
-            <TextField layoutX="14.0" layoutY="64.0" prefHeight="25.0" prefWidth="91.0" />
+            <Line endX="6.0" endY="-71.0" layoutX="50.0" layoutY="124.0" startX="6.0" startY="-20.0" />
+            <TextField layoutX="14.0" layoutY="89.0" prefHeight="25.0" prefWidth="91.0" promptText="End Date" />
+            <TextField layoutX="14.0" layoutY="40.0" prefHeight="25.0" prefWidth="91.0" promptText="Start Date" />
+            <Button layoutX="34.0" layoutY="121.0" mnemonicParsing="false" text="Chart" />
          </children></AnchorPane>
   </items>
 </SplitPane>
