@@ -14,3 +14,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
     
+
+-- Will take in a menu item name and a parameter of ingredient names. It will delete the original ingredients used for the
+-- menu item and then added the new ingredients for the menu item into the menu items ingredients junction table
