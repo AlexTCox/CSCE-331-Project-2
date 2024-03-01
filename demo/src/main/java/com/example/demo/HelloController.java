@@ -199,32 +199,27 @@ public class HelloController implements Initializable{
             connection.close();
         }
 
-        myListView.getItems().clear();
-        priceList.clear();
-        menuList.clear();
-        addonList.clear();
-        drinkList.clear();
-
-        price = 0;
-        myLabel.setText("Order: $" + price);
-
-        index = 0;
-
 
         try {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
 
             String[] preMenuArray = new String[menuList.size()];
-            menuList.toArray(preMenuArray);
+            for (int j = 0; j < menuList.size(); j++) {
+                preMenuArray[j] = menuList.get(j);
+            }
             Array menuArray = connection.createArrayOf("TEXT", preMenuArray);
 
             String[] preDrinkArray = new String[drinkList.size()];
-            drinkList.toArray(preDrinkArray);
+            for (int j = 0; j < drinkList.size(); j++) {
+                preDrinkArray[j] = drinkList.get(j);
+            }
             Array drinkArray = connection.createArrayOf("TEXT", preDrinkArray);
 
             String[] preAddonArray = new String[addonList.size()];
-            addonList.toArray(preAddonArray);
+            for (int j = 0; j < addonList.size(); j++) {
+                preAddonArray[j] = addonList.get(j);
+            }
             Array addonArray = connection.createArrayOf("TEXT", preAddonArray);
 
             compOrder = connection.prepareCall("SELECT complete_order(?, ?, ?, ?)");
@@ -242,6 +237,17 @@ public class HelloController implements Initializable{
             statement.close();
             connection.close();
         }
+
+        myListView.getItems().clear();
+        priceList.clear();
+        menuList.clear();
+        addonList.clear();
+        drinkList.clear();
+
+        price = 0;
+        myLabel.setText("Order: $" + price);
+
+        index = 0;
     }
 
 
@@ -279,6 +285,7 @@ public class HelloController implements Initializable{
     private Label myLabel1;
     public void showOrderID(ActionEvent e) {
         myLabel1.setText("ID: " + orderID);
+        // myLabel1.setText(menuList.getFirst());
     }
 
 
