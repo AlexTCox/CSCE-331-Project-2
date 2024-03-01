@@ -7,7 +7,7 @@ DECLARE
 BEGIN
     SELECT id FROM menu_item WHERE menu_item.name = menu_item_to_change INTO get_menu_id;
     DELETE FROM menu_item_ingredient WHERE get_menu_id = menu_id;
-    FOR single_ingredient IN ARRAY new_ingredients LOOP
+    FOREACH single_ingredient IN ARRAY new_ingredients LOOP
         SELECT id FROM ingredients WHERE single_ingredient = ingredients.name INTO get_id;
         INSERT INTO menu_item_ingredient(menu_id, ingredient_id) VALUES (get_menu_id, get_id);
     end loop;
@@ -16,4 +16,4 @@ $$ LANGUAGE plpgsql;
     
 
 -- Will take in a menu item name and a parameter of ingredient names. It will delete the original ingredients used for the
--- menu item and then added the new ingredients for the menu item into the menu items ingredients junction table
+-- menu item and then added the new ingredients for the menu item into the menu items ingredients junction table.
