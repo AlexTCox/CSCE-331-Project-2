@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
+import java.sql.*;
 import java.io.IOException;
 public class LogIn {
     public LogIn()
@@ -23,27 +23,64 @@ public class LogIn {
 
     public void userLogIn(ActionEvent event) throws IOException
     {
-        checkLogin();
-    }
-    public void checkLogin() throws IOException
-    {
+
+        String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
+        String user = "csce331_550_01_user";
+        String password = "cSCUE8w9";
         Main m = new Main();
-        String username = name.getText();
-        String spassword = passkey.getText();
-        int password = Integer.parseInt(spassword);
+        String user_name = name.getText();
+        String user_spassword = passkey.getText();
+        int user_password =  user_spassword.hashCode();
+        Boolean user_result = false;
 
-        if(username.equals("raghav") &&  password==123)
-        {
-              wronglogin.setText("Success!");
-              m.changeScene("afterLogin.fxml");
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            // first ? is for return value
+            String user_query =  "{ ? = call check_pin(?, ?) }";
+            //Preparing a CallableStatement to call a function
+            CallableStatement user_cstmt = connection.prepareCall(user_query);
+            //Registering the out parameter of the function (return type)
+            user_cstmt.registerOutParameter(1, Types.BOOLEAN);
+            //Setting the input parameters of the function
+            user_cstmt.setString(2, user_name);
+            user_cstmt.setInt(3, user_password);
+            user_cstmt.execute();
+            user_result = user_cstmt.getBoolean(1);
         }
-        else if(name.getText().isEmpty() && passkey.getText().isEmpty())
+        catch (SQLException ex)
         {
-            wronglogin.setText("Please enter your data.");
-        }else
-        {
-            wronglogin.setText("Wrong username or password!");
+            ex.printStackTrace();
         }
+        Boolean admin_result = false;
+         if(user_result){
+             wronglogin.setText("Success!");
+             try
+             {
+                 Connection connection = DriverManager.getConnection(url, user, password);
+                 // first ? is for return value
+                 String admin_query = "{ ? = call check_admin(?) }";
+                 CallableStatement admin_cstmt = connection.prepareCall(admin_query);
+                 admin_cstmt.registerOutParameter(1, Types.BOOLEAN);
+                 // Setting the input parameters of the function
+                 admin_cstmt.setString(2, user_name);
+                 admin_cstmt.execute();
+                 admin_result = admin_cstmt.getBoolean(1);
+             }
+             catch (SQLException ex)
+             {
+                 ex.printStackTrace();
+             }
+             if(admin_result)
+             {
+                 wronglogin.setText("Manager");
+             }else
+             {
+                 wronglogin.setText("Server");
+             }
 
+         }else
+         {
+             wronglogin.setText("Wrong username or password!");
+         }
     }
 }

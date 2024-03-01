@@ -37,7 +37,7 @@
             </Label>
             <TextField fx:id="name" layoutX="123.0" layoutY="174.0" promptText="Enter name" />
             <PasswordField fx:id="passkey" layoutX="123.0" layoutY="224.0" promptText="Enter passkey" />
-            <Label fx:id="wronglogin" layoutX="123.0" layoutY="149.0">
+            <Label fx:id="wronglogin" layoutX="40.0" layoutY="133.0" prefHeight="23.0" prefWidth="252.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
