@@ -1,6 +1,7 @@
 package com.example;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -62,7 +63,8 @@ public class PrimaryController implements Initializable {
     }
 
     public void changeScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));            Scene scene = new Scene(root);
+        Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));
+        Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
@@ -142,6 +144,19 @@ public class PrimaryController implements Initializable {
     //when diselected item is removed from table view
     private void removeItemFromTableView(String itemName) {
         tableView.getItems().removeIf(item -> item.getName().equals(itemName));
+    }
+
+    @FXML
+    public void logoutBtnAction(ActionEvent event){
+        try{
+        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));            
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //adds the items to the table
