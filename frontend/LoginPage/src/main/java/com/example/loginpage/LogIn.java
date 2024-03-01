@@ -27,7 +27,6 @@ public class LogIn {
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
         String user = "csce331_550_01_user";
         String password = "cSCUE8w9";
-        Main m = new Main();
         String user_name = name.getText();
         String user_spassword = passkey.getText();
         int user_password =  user_spassword.hashCode();
@@ -51,7 +50,9 @@ public class LogIn {
         {
             ex.printStackTrace();
         }
+        Main m = new Main();
         Boolean admin_result = false;
+
          if(user_result){
              wronglogin.setText("Success!");
              try
@@ -73,9 +74,11 @@ public class LogIn {
              if(admin_result)
              {
                  wronglogin.setText("Manager");
+                 m.changeuserScene("AdminafterLogin.fxml");
              }else
              {
                  wronglogin.setText("Server");
+                 m.changeuserScene("ServerafterLogin.fxml");
              }
 
          }else

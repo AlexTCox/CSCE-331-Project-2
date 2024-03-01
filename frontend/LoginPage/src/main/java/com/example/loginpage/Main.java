@@ -24,7 +24,9 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
-    public void changeScene(String fxml) throws IOException
+
+
+    public void changeuserScene(String fxml) throws IOException
     {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxml));
         Parent root = fxmlLoader.load();
