@@ -21,20 +21,28 @@ public class LogIn {
     @FXML
     private PasswordField passkey;
 
+    // Function to user Login
     public void userLogIn(ActionEvent event) throws IOException
     {
-
+        // Storing JDBC URL, username, and password of SQL server
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
         String user = "csce331_550_01_user";
         String password = "cSCUE8w9";
+
+        // Storing user_name get from the user in GUI
         String user_name = name.getText();
         String user_spassword = passkey.getText();
+
+        // Retrieving the username and password entered by the user from GUI elements
         int user_password =  user_spassword.hashCode();
+
+        // Initializing a boolean variable to track user authentication result
         Boolean user_result = false;
 
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            // first ? is for return value
+
+            // Defining a SQL query to call a stored function with an output parameter
             String user_query =  "{ ? = call check_pin(?, ?) }";
             //Preparing a CallableStatement to call a function
             CallableStatement user_cstmt = connection.prepareCall(user_query);
@@ -44,45 +52,57 @@ public class LogIn {
             user_cstmt.setString(2, user_name);
             user_cstmt.setInt(3, user_password);
             user_cstmt.execute();
+
+            // Retrieving the result from the output parameter
             user_result = user_cstmt.getBoolean(1);
         }
         catch (SQLException ex)
         {
             ex.printStackTrace();
         }
+
+        // Creating an instance of the Main class
         Main m = new Main();
+        // Initializing a boolean variable to track adim authentication result
         Boolean admin_result = false;
 
+        // Checking if user authentication was successful
          if(user_result){
              wronglogin.setText("Success!");
              try
              {
                  Connection connection = DriverManager.getConnection(url, user, password);
-                 // first ? is for return value
                  String admin_query = "{ ? = call check_admin(?) }";
                  CallableStatement admin_cstmt = connection.prepareCall(admin_query);
                  admin_cstmt.registerOutParameter(1, Types.BOOLEAN);
                  // Setting the input parameters of the function
                  admin_cstmt.setString(2, user_name);
                  admin_cstmt.execute();
+                 // Retrieving the result from the output parameter
                  admin_result = admin_cstmt.getBoolean(1);
              }
              catch (SQLException ex)
              {
                  ex.printStackTrace();
              }
+
+             // Checking if the user is an admin
              if(admin_result)
              {
                  wronglogin.setText("Manager");
+
+                 // Redirecting to the admin dashboard scene
                  m.changeuserScene("AdminafterLogin.fxml");
              }else
              {
                  wronglogin.setText("Server");
+                 // Redirecting to the server dashboard scene
                  m.changeuserScene("ServerafterLogin.fxml");
              }
 
          }else
          {
+             // Displaying error message for wrong username or password
              wronglogin.setText("Wrong username or password!");
          }
     }
