@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<SplitPane dividerPositions="0.40468227424749165" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
+<SplitPane dividerPositions="0.40468227424749165" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ED6F13;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
@@ -74,16 +74,16 @@
                 </TitledPane>
               </panes>
             </Accordion>
-            <Button fx:id="stockBtn" layoutX="20.0" layoutY="267.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="52.0" prefWidth="200.0" text="Update and Add Items" />
-            <Button fx:id="logOut" layoutX="20.0" layoutY="332.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="52.0" prefWidth="200.0" text="LogOUt" />
+            <Button fx:id="stockBtn" layoutX="20.0" layoutY="267.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="52.0" prefWidth="200.0" styleClass="buttons" text="Update and Add Items" />
+            <Button fx:id="logOut" layoutX="20.0" layoutY="332.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="52.0" prefWidth="200.0" styleClass="buttons" text="LogOUt" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <TableView fx:id="tableView" layoutX="14.0" layoutY="184.0" prefHeight="200.0" prefWidth="316.0">
+            <TableView id="statTable" fx:id="tableView" layoutX="14.0" layoutY="184.0" prefHeight="200.0" prefWidth="316.0" styleClass=".table-view">
               <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Item Name" />
-                <TableColumn fx:id="stockColumn" prefWidth="75.0" text="Stock" />
-                <TableColumn fx:id="priceColumn" prefWidth="75.0" text="Price" />
+                <TableColumn fx:id="nameColumn" prefWidth="75.0" styleClass="tableCols" text="Item Name" />
+                <TableColumn fx:id="stockColumn" prefWidth="75.0" styleClass="tableCols" text="Stock" />
+                <TableColumn fx:id="priceColumn" prefWidth="75.0" styleClass="tableCols" text="Price" />
               </columns>
             </TableView>
             <LineChart layoutX="107.0" layoutY="3.0" prefHeight="180.0" prefWidth="239.0">
@@ -97,7 +97,7 @@
             <Line endX="6.0" endY="-71.0" layoutX="50.0" layoutY="124.0" startX="6.0" startY="-20.0" />
             <TextField layoutX="14.0" layoutY="89.0" prefHeight="25.0" prefWidth="91.0" promptText="End Date" />
             <TextField layoutX="14.0" layoutY="40.0" prefHeight="25.0" prefWidth="91.0" promptText="Start Date" />
-            <Button layoutX="34.0" layoutY="121.0" mnemonicParsing="false" text="Chart" />
+            <Button layoutX="34.0" layoutY="121.0" mnemonicParsing="false" styleClass="buttons" text="Chart" />
          </children></AnchorPane>
   </items>
 </SplitPane>

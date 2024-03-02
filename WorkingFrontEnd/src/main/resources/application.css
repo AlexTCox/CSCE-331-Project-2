@@ -1,0 +1,42 @@
+/* color pallet  
+ED6F13
+E7BE45
+F1D59D
+5E503C
+31282B*/
+
+
+.buttons{
+    -fx-background-color: #E7BE45;
+    -fx-text-fill: #5E503C;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    /* -fx-font: 8px; */
+    padding: 10px;
+    -fx-border-color: #5E503C;
+    -fx-border-width: 2px;
+}
+
+#tableItems{
+    -fx-background-color: #F1D59D;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+
+#stockScroll{
+    background-color: transparent;
+}
+#stockScroll .scroll-bar{
+    -fx-background-color: #5E503C;
+}
+
+#stockScroll > .corner {
+    -fx-background-color: #5E503C;
+}
+#stockScroll .scroll-bar .thumb {
+    -fx-background-color: #F1D59D;
+    -fx-background-radius: 10px;
+}
+

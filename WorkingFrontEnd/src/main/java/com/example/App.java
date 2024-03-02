@@ -21,6 +21,7 @@ public class App extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         primarystage.setTitle("Login");
         primarystage.setScene(scene);
+        scene.getStylesheets().add("application.css");
         primarystage.show();
     }
 
@@ -37,5 +38,6 @@ public class App extends Application {
         Parent root = fxmlLoader.load();
         // Set the root element of the current scene to the new root element
         stg.getScene().setRoot(root);
+        stg.getScene().getStylesheets().add("application.css");
     }
 }

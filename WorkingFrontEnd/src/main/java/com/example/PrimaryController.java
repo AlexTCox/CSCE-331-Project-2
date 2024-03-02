@@ -54,6 +54,8 @@ public class PrimaryController implements Initializable {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
+            stage.setTitle("Manage Stock");
+            scene.getStylesheets().add("application.css");
             stage.show();
             
         }catch(IOException e) {
@@ -67,6 +69,8 @@ public class PrimaryController implements Initializable {
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
+        stage.setTitle("Manage Stock");
+        scene.getStylesheets().add("application.css");
         stage.show();
     }
 
@@ -78,6 +82,7 @@ public class PrimaryController implements Initializable {
         String password = "cSCUE8w9";
 
             //hold the name and quanity of items
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));

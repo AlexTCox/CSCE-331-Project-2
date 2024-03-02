@@ -399,7 +399,9 @@ public class Waiter implements Initializable{
             while (resultSet.next()) { //iterate over every row returned
                 String menuItemName = resultSet.getString("name");
                 double menuItemPrice = Double.parseDouble(resultSet.getString("price"));
-                buttonlist.add(new Button(menuItemName));
+                Button button = new Button(menuItemName);
+                button.getStyleClass().add("buttons");
+                buttonlist.add(button);
                 buttonlist.get(i).setOnAction(e1 -> {
                     price += menuItemPrice;
                     priceList.add(menuItemPrice);
