@@ -84,6 +84,17 @@ public class Waiter implements Initializable{
         }
     }
 
+    public void logoutBtnAction(ActionEvent event){
+        try{
+        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));            
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void Addon_Query(ActionEvent e) throws SQLException {
 
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
@@ -177,7 +188,7 @@ public class Waiter implements Initializable{
         String password = "cSCUE8w9";
 
         String query = "SELECT NEW_ORDER(" + operatorID + ")";
-        List<Integer> orderIDList = new ArrayList<>();
+        // s
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -186,6 +197,45 @@ public class Waiter implements Initializable{
             while (resultSet.next()) {
                 orderID = resultSet.getInt("new_order");
             }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }
+
+
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            statement = connection.createStatement();
+
+            String[] preMenuArray = new String[menuList.size()];
+            for (int j = 0; j < menuList.size(); j++) {
+                preMenuArray[j] = menuList.get(j);
+            }
+            Array menuArray = connection.createArrayOf("TEXT", preMenuArray);
+
+            String[] preDrinkArray = new String[drinkList.size()];
+            for (int j = 0; j < drinkList.size(); j++) {
+                preDrinkArray[j] = drinkList.get(j);
+            }
+            Array drinkArray = connection.createArrayOf("TEXT", preDrinkArray);
+
+            String[] preAddonArray = new String[addonList.size()];
+            for (int j = 0; j < addonList.size(); j++) {
+                preAddonArray[j] = addonList.get(j);
+            }
+            Array addonArray = connection.createArrayOf("TEXT", preAddonArray);
+
+            compOrder = connection.prepareCall("{ CALL complete_order(?, ?, ?, ?)}"); //{? = CALL new_menu_option(?, ?, ?)}
+            compOrder.setInt(1, orderID);
+            compOrder.setArray(2, menuArray);
+            compOrder.setArray(3, drinkArray);
+            compOrder.setArray(4, addonArray);
+
+            compOrder.execute();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -205,39 +255,6 @@ public class Waiter implements Initializable{
         myLabel.setText("Order: $" + price);
 
         index = 0;
-
-
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            statement = connection.createStatement();
-
-            String[] preMenuArray = new String[menuList.size()];
-            menuList.toArray(preMenuArray);
-            Array menuArray = connection.createArrayOf("TEXT", preMenuArray);
-
-            String[] preDrinkArray = new String[drinkList.size()];
-            drinkList.toArray(preDrinkArray);
-            Array drinkArray = connection.createArrayOf("TEXT", preDrinkArray);
-
-            String[] preAddonArray = new String[addonList.size()];
-            addonList.toArray(preAddonArray);
-            Array addonArray = connection.createArrayOf("TEXT", preAddonArray);
-
-            compOrder = connection.prepareCall("SELECT complete_order(?, ?, ?, ?)");
-            compOrder.setInt(1, orderID);
-            compOrder.setArray(2, menuArray);
-            compOrder.setArray(3, drinkArray);
-            compOrder.setArray(4, addonArray);
-
-            compOrder.execute();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            resultSet.close();
-            statement.close();
-            connection.close();
-        }
     }
 
 
@@ -275,6 +292,7 @@ public class Waiter implements Initializable{
     private Label myLabel1;
     public void showOrderID(ActionEvent e) {
         myLabel1.setText("ID: " + orderID);
+        // myLabel1.setText(menuList.getFirst());
     }
 
 
@@ -322,21 +340,21 @@ public class Waiter implements Initializable{
     private Scene scene;
     private Parent root;
 
-    // public void switchToScene1(ActionEvent event) throws IOException {
-    //     root = FXMLLoader.load(getClass().getResource("view_A.fxml"));
-    //     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    //     scene = new Scene(root);
-    //     stage.setScene(scene);
-    //     stage.show();
-    // }
+    public void switchToScene1(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("view_A.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
-    // public void switchToScene2(ActionEvent event) throws IOException {
-    //     root = FXMLLoader.load(getClass().getResource("view_B.fxml"));
-    //     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    //     scene = new Scene(root);
-    //     stage.setScene(scene);
-    //     stage.show();
-    // }
+    public void switchToScene2(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("view_B.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void table(ActionEvent e) {
     }

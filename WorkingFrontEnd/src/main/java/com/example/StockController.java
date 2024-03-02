@@ -1,6 +1,7 @@
 package com.example;
 
 import java.io.IOException;
+// import java.lang.reflect.Array;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ResourceBundle;
+import java.sql.Array;
+import java.sql.CallableStatement;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -309,10 +313,13 @@ public class StockController implements Initializable{
         String priceText = priceTextField.getText();
         String minStockText = minStockTextField.getText();
         String ingredientsText = ingredientsField.getText();
+        int rowsAffected = 0;
+        Boolean fxnCalled = false;
     
 
     try(Connection connection = DriverManager.getConnection(dbUrl, user, password)) {
-        PreparedStatement statement;
+        CallableStatement menuFxn = null;
+        PreparedStatement statement =null;
         switch (category) {
             case "ingredients":
                 int newStock = Integer.parseInt(stockText);
@@ -324,11 +331,16 @@ public class StockController implements Initializable{
                 statement.setDouble(3, newPrice);
                 statement.setInt(4, newMinStock);
                 break;
-            case "menu_item": // TODO make this function add ingredients as well
-                String[] ingredients = ingredientsText.split(",");
+            case "menu_item": 
+                String[] ingredientsArray = ingredientsText.split(",");
+                Array ingredients = connection.createArrayOf("TEXT", ingredientsArray);
                 double menuItemPrice = Double.parseDouble(priceText);
-                statement = connection.prepareStatement(""); // function call here
-
+                menuFxn = connection.prepareCall("{? = CALL new_menu_option(?, ?, ?)}");
+                menuFxn.registerOutParameter(1, Types.BOOLEAN);
+                menuFxn.setString(2, nameText);
+                menuFxn.setFloat(3, (float) menuItemPrice);
+                menuFxn.setArray(4, ingredients);
+                fxnCalled =true;
                 break;
             case "drinks":
                 String size = nameText;
@@ -340,9 +352,13 @@ public class StockController implements Initializable{
             default:
                 throw new IllegalArgumentException("Invalid category: " + category);
         }
-
-        int rowsAffected = statement.executeUpdate();
-        if (rowsAffected > 0) {
+        if(statement != null){
+            rowsAffected = statement.executeUpdate();
+        }
+        if(fxnCalled){
+            rowsAffected = menuFxn.executeUpdate();
+        }
+        if (rowsAffected > 0 ) {
             System.out.println("Item added successfully.");
         } else {
             System.out.println("Failed to add item.");
