@@ -19,8 +19,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 // import static com.example.demo.Database.Query;
 
@@ -84,17 +88,6 @@ public class Waiter implements Initializable{
         }
     }
 
-    public void logoutBtnAction(ActionEvent event){
-        try{
-        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));            
-        Scene scene = new Scene(root);
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-        }catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
     public void Addon_Query(ActionEvent e) throws SQLException {
 
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
@@ -188,7 +181,7 @@ public class Waiter implements Initializable{
         String password = "cSCUE8w9";
 
         String query = "SELECT NEW_ORDER(" + operatorID + ")";
-        // s
+        List<Integer> orderIDList = new ArrayList<>();
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -229,7 +222,7 @@ public class Waiter implements Initializable{
             }
             Array addonArray = connection.createArrayOf("TEXT", preAddonArray);
 
-            compOrder = connection.prepareCall("{ CALL complete_order(?, ?, ?, ?)}"); //{? = CALL new_menu_option(?, ?, ?)}
+            compOrder = connection.prepareCall("SELECT complete_order(?, ?, ?, ?)");
             compOrder.setInt(1, orderID);
             compOrder.setArray(2, menuArray);
             compOrder.setArray(3, drinkArray);
@@ -360,6 +353,19 @@ public class Waiter implements Initializable{
     }
 
     @FXML
+    public void logoutBtnAction(ActionEvent event){
+        try{
+        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));            
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private BorderPane mainView;
 
     @FXML
@@ -397,6 +403,7 @@ public class Waiter implements Initializable{
                 buttonlist.get(i).setOnAction(e1 -> {
                     price += menuItemPrice;
                     priceList.add(menuItemPrice);
+                    menuList.add(menuItemName);
                     myLabel.setText("Order: $" + price);
                     myListView.getItems().add(index, menuItemName+ " $" + menuItemPrice);
                     index += 1;
