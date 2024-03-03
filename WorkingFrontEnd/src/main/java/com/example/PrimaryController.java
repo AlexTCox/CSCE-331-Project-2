@@ -1,5 +1,8 @@
 package com.example;
 
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -9,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -18,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.scene.Node;
 
@@ -35,10 +40,22 @@ public class PrimaryController implements Initializable {
     private TableColumn<DataItem, String> nameColumn;
     @FXML
     private TableColumn<DataItem, Integer> stockColumn;
+    @FXML 
+    TableView<RowData> salesTable;
+    @FXML 
+    TableColumn<RowData, String> salesName;
+    @FXML
+    TableColumn<RowData, Integer> salesQuantity;
+    @FXML
+    TableColumn<RowData, Double> saleDate;
     @FXML
     private Button stockBtn;
     @FXML
     private TableColumn<DataItem, Integer> priceColumn;
+    @FXML
+    DatePicker startDate;
+    @FXML
+    DatePicker endDate;
 
 
     private static Connection connection;
@@ -86,6 +103,8 @@ public class PrimaryController implements Initializable {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        salesName.setCellValueFactory(new PropertyValueFactory<>("column1"));
+        salesQuantity.setCellValueFactory(new PropertyValueFactory<>("column2"));
 
         //general queries to populate
         String queryIngredients = "SELECT * FROM ingredients;";
@@ -166,6 +185,52 @@ public class PrimaryController implements Initializable {
             e.printStackTrace();
         }
     }
+    @FXML
+    void salesTableBtnAction(ActionEvent event){
+        LocalDate startDateValue = startDate.getValue();
+        LocalDate endDateValue = endDate.getValue();
+
+        Timestamp start = Timestamp.valueOf(startDateValue.atStartOfDay());
+        Timestamp end = Timestamp.valueOf(endDateValue.atStartOfDay());
+        try{
+            connection = DriverManager.getConnection("jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db", "csce331_550_01_user", "cSCUE8w9");
+            CallableStatement statement = connection.prepareCall("{call sales_report(?, ?)}");
+            statement.setTimestamp(1, start);
+            statement.setTimestamp(2, end);
+            ResultSet resultSet = statement.executeQuery();
+    
+            // Clear the table
+            salesTable.getItems().clear();
+    
+            // Loop through the result set and add rows to the table
+            while (resultSet.next()) {
+                String column1 = resultSet.getString("item_name");
+                long column2 = resultSet.getLong("count");
+                // Get more columns as needed
+    
+                RowData row = new RowData(column1, column2);
+                salesTable.getItems().add(row);
+            }
+    
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static class RowData {
+    private final SimpleStringProperty column1;
+    private final LongProperty column2;
+    // Add more properties as needed
+
+    public RowData(String column1, long column2) {
+        this.column1 = new SimpleStringProperty(column1);
+        this.column2 = new SimpleLongProperty(column2);
+    }
+
+    public String getColumn1() { return column1.get(); }
+    public long getColumn2() { return column2.get(); }
+    // Add more getters as needed
+}
 
     //adds the items to the table
     private void populateTableView(String tableName, String itemName) {
