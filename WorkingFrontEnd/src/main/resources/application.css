@@ -77,3 +77,9 @@ F1D59D
     -fx-background-color: #F1D59D;
     -fx-border-color: #5E503C;
 }
+
+#splitPane  .split-pane-divider {
+    -fx-background-color: #E7BE45;
+    -fx-padding: 2px;
+
+}

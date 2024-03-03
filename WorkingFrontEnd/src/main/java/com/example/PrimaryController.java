@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -111,6 +112,25 @@ public class PrimaryController implements Initializable {
         String queryMenu = "SELECT * FROM menu_Item;";
         String queryDrinks = "SELECT * FROM drinks;";
 
+        startDate.setDayCellFactory(picker -> new DateCell() {
+        @Override
+        public void updateItem(LocalDate date, boolean empty) {
+            super.updateItem(date, empty);
+            LocalDate minDate = LocalDate.of(2023, 1, 1);
+            LocalDate maxDate = LocalDate.now();
+            setDisable(empty || date.compareTo(minDate) < 0 || date.compareTo(maxDate) > 0);
+        }
+        });
+
+        endDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate minDate = startDate.getValue();
+        
+                setDisable(empty || (minDate != null && date.compareTo(minDate) < 0) || date.compareTo(LocalDate.now()) > 0);
+            }
+        });
 
 
         try {
