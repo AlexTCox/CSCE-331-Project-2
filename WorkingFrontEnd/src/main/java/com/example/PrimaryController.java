@@ -102,6 +102,7 @@ public class PrimaryController implements Initializable {
             while (resultSet.next()) {
                 String ingredient = resultSet.getString("name");
                 CheckBox checkBox = new CheckBox(ingredient);
+                checkBox.getStyleClass().add("checkBox");
                 checkBox.setOnAction(event -> {
                     if(checkBox.isSelected()){
                         populateTableView("ingredients", ingredient);
@@ -116,6 +117,7 @@ public class PrimaryController implements Initializable {
             while (resultSet.next()) {
                 String menuItem = resultSet.getString("name");
                 CheckBox checkBox = new CheckBox(menuItem);
+                checkBox.getStyleClass().add("checkBox");
                 checkBox.setOnAction(event -> {
                     if(checkBox.isSelected()){
                         populateTableView("menu_item", menuItem);
@@ -130,6 +132,7 @@ public class PrimaryController implements Initializable {
             while (resultSet.next()) {
                 String drink = resultSet.getString("size");
                 CheckBox checkBox = new CheckBox(drink);
+                checkBox.getStyleClass().add("checkBox");
                 checkBox.setOnAction(event -> {
                     if(checkBox.isSelected()){
                         populateTableView("drinks", drink);

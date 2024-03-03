@@ -44,7 +44,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="button" layoutX="123.0" layoutY="276.0" mnemonicParsing="false" onAction="#userLogIn" style="-fx-background-color: #E7BE45; -fx-text-fill: #5E503C; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-font-weight: bold; -fx-padding: 10px; -fx-border-color: #5E503C; -fx-border-width: 2px; -fx-scale-x: 1; -fx-scale-y: 1;" styleClass="buttons" text="Log In">
+            <Button fx:id="button" layoutX="123.0" layoutY="276.0" mnemonicParsing="false" onAction="#userLogIn" text="Log In">
                <font>
                   <Font size="16.0" />
                </font>

@@ -20,7 +20,7 @@
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <ScrollPane id="stockScroll" fx:id="ingredientPane" layoutX="42.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
+            <ScrollPane id="stockScroll" fx:id="ingredientPane" layoutX="42.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="200.0" style="-fx-background-color: transparent;">
                      <children>

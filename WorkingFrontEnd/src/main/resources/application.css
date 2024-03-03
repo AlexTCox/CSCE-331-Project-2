@@ -18,25 +18,62 @@ F1D59D
     -fx-border-width: 2px;
 }
 
-#tableItems{
+.scrollPane{
     -fx-background-color: #F1D59D;
     -fx-text-fill: #5E503C;
     -fx-font-weight: bold;
     -fx-border-width: 2px;
 }
 
-#stockScroll{
+.scrollPane{
     background-color: transparent;
 }
-#stockScroll .scroll-bar{
+.scrollPane .scroll-bar{
     -fx-background-color: #5E503C;
 }
 
-#stockScroll > .corner {
+.scrollPane > .corner {
     -fx-background-color: #5E503C;
 }
-#stockScroll .scroll-bar .thumb {
+.scrollPane .scroll-bar .thumb {
     -fx-background-color: #F1D59D;
     -fx-background-radius: 10px;
 }
 
+.accordian{
+    -fx-background-color: transparent;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+.accordian .titledPane > .title{
+    -fx-background-color: #E7BE45;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+.accordian .titledPane > .content{
+    -fx-background-color: transparent;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+
+.checkBox{
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+.checkBox .box{
+    -fx-background-color: #E7BE45;
+    -fx-border-color: #5E503C;
+}
+
+
+.checkBox .box:hover{
+    -fx-background-color: #F1D59D;
+    -fx-border-color: #5E503C;
+}
