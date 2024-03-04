@@ -64,7 +64,9 @@ public class Waiter implements Initializable{
             while (resultSet.next()) { //iterate over every row returned
                 String menuItemName = resultSet.getString("name");
                 double menuItemPrice = Double.parseDouble(resultSet.getString("price"));
-                buttonlist.add(new Button(menuItemName));
+                Button button = new Button(menuItemName);
+                button.getStyleClass().add("buttons");
+                buttonlist.add(button);
                 buttonlist.get(i).setOnAction(e1 -> {
                     price += menuItemPrice;
                     priceList.add(menuItemPrice);
@@ -107,7 +109,9 @@ public class Waiter implements Initializable{
             while (resultSet.next()) { //iterate over every row returned
                 String addonName = resultSet.getString("name");
                 double addonPrice = Double.parseDouble(resultSet.getString("add_on_price"));
-                buttonlist.add(new Button(addonName));
+                Button button = new Button(addonName);
+                button.getStyleClass().add("buttons");
+                buttonlist.add(button);
                 buttonlist.get(i).setOnAction(e1 -> {
                     price += addonPrice;
                     priceList.add(addonPrice);
@@ -150,7 +154,9 @@ public class Waiter implements Initializable{
             while (resultSet.next()) { //iterate over every row returned
                 String drinkName = resultSet.getString("size");
                 double drinkPrice = Double.parseDouble(resultSet.getString("price"));
-                buttonlist.add(new Button(drinkName));
+                Button button = new Button(drinkName);
+                button.getStyleClass().add("buttons");
+                buttonlist.add(button);
                 buttonlist.get(i).setOnAction(e1 -> {
                     price += drinkPrice;
                     priceList.add(drinkPrice);
@@ -294,62 +300,11 @@ public class Waiter implements Initializable{
     private double price = 0;
     private int index = 0;
 
-    @FXML
-    private Circle myCircle;
-    private double x;
-    private double y;
-
     public void add(ActionEvent e) {
         price += 2;
         myLabel.setText("Order: $" + price);
         myListView.getItems().add(index, "Pizza $2.00");
         index += 1;
-    }
-
-    public void pizza(ActionEvent e) {
-        price += 2;
-        myLabel.setText("Order: $" + price);
-        myListView.getItems().add(index, "Pizza $2.00");
-        index += 1;
-    }
-
-    public void burger(ActionEvent e) {
-        price += 4;
-        myLabel.setText("Order: $" + price);
-        myListView.getItems().add(index, "Pizza $4.00");
-        index += 1;
-    }
-    public void down(ActionEvent e) {
-        myCircle.setCenterY(y += 10);
-    }
-    public void left(ActionEvent e) {
-        myCircle.setCenterX(x -= 10);
-    }
-    public void right(ActionEvent e) {
-        myCircle.setCenterX(x += 10);
-    }
-
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
-    public void switchToScene1(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("view_A.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void switchToScene2(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("view_B.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void table(ActionEvent e) {
     }
 
     @FXML

@@ -34,6 +34,14 @@ public class App extends Application {
     {
         // Load the FXML file for the new scene using FXMLLoader
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
+        if (App.class.getResource(fxml) != null) {
+            String resourcePath = App.class.getResource(fxml).toString();
+            if (resourcePath.endsWith("primary.fxml")) {
+                stg.setTitle("Manager");
+            } else if (resourcePath.endsWith("Waiter.fxml")) {
+                stg.setTitle("Waiter");
+            }
+        }
         // Load the root element of the FXML file
         Parent root = fxmlLoader.load();
         // Set the root element of the current scene to the new root element

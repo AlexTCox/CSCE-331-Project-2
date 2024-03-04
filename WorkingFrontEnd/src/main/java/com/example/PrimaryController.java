@@ -10,12 +10,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -24,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import javafx.scene.Node;
 
@@ -50,6 +55,8 @@ public class PrimaryController implements Initializable {
     @FXML
     TableColumn<RowData, Double> saleDate;
     @FXML
+    TableColumn<RowData, String> item2Name;
+    @FXML
     private Button stockBtn;
     @FXML
     private TableColumn<DataItem, Integer> priceColumn;
@@ -57,11 +64,22 @@ public class PrimaryController implements Initializable {
     DatePicker startDate;
     @FXML
     DatePicker endDate;
+    @FXML
+    RadioButton salesBtn;
+    @FXML
+    RadioButton usageBtn;
+    @FXML
+    RadioButton restockBtn;
+    @FXML
+    RadioButton excessBtn;
+    @FXML
+    RadioButton pairsBtn;
 
 
     private static Connection connection;
     private static Statement statement;
     private static ResultSet resultSet;
+    private static String reportType;
 
     @FXML
 
@@ -75,6 +93,8 @@ public class PrimaryController implements Initializable {
             stage.setTitle("Manage Stock");
             scene.getStylesheets().add("application.css");
             stage.show();
+            reportType = null;
+            endDate.setDisable(false);
             
         }catch(IOException e) {
             e.printStackTrace();
@@ -101,16 +121,47 @@ public class PrimaryController implements Initializable {
 
             //hold the name and quanity of items
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        salesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         salesName.setCellValueFactory(new PropertyValueFactory<>("column1"));
         salesQuantity.setCellValueFactory(new PropertyValueFactory<>("column2"));
+        item2Name.setCellValueFactory(new PropertyValueFactory<>("column3"));
 
         //general queries to populate
         String queryIngredients = "SELECT * FROM ingredients;";
         String queryMenu = "SELECT * FROM menu_Item;";
         String queryDrinks = "SELECT * FROM drinks;";
+        ToggleGroup group = new ToggleGroup();
+        salesBtn.setToggleGroup(group);
+        usageBtn.setToggleGroup(group);
+        restockBtn.setToggleGroup(group);
+        excessBtn.setToggleGroup(group);
+        pairsBtn.setToggleGroup(group);
+
+        salesBtn.onActionProperty().set(event -> {
+            reportType = "sales";
+            endDate.setDisable(true);
+        });
+        usageBtn.onActionProperty().set(event -> {
+            reportType = "usage";
+            endDate.setDisable(false);
+        });
+        restockBtn.onActionProperty().set(event -> {
+            reportType = "restock";
+            endDate.setDisable(false);
+        });
+        excessBtn.onActionProperty().set(event -> {
+            reportType = "excess";
+            endDate.setDisable(false);
+        });
+        pairsBtn.onActionProperty().set(event -> {
+            reportType = "pairs";
+            endDate.setDisable(false);
+        });
+        
+
 
         startDate.setDayCellFactory(picker -> new DateCell() {
         @Override
@@ -182,10 +233,14 @@ public class PrimaryController implements Initializable {
             }
 
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("SQL ERROR");
+            alert.setHeaderText("Database not connected");
+            alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+            alert.showAndWait();
+            return;
         }
     }
     //when diselected item is removed from table view
@@ -209,47 +264,157 @@ public class PrimaryController implements Initializable {
     void salesTableBtnAction(ActionEvent event){
         LocalDate startDateValue = startDate.getValue();
         LocalDate endDateValue = endDate.getValue();
+        Timestamp start = null;
+        Timestamp end = null;
 
-        Timestamp start = Timestamp.valueOf(startDateValue.atStartOfDay());
-        Timestamp end = Timestamp.valueOf(endDateValue.atStartOfDay());
+        if (startDateValue == null || endDateValue == null) {
+            // Handle the case where startDate or endDate is null
+            // For example, show an error message or set default values
+        } else {
+            // Continue with the rest of the code
+            start = Timestamp.valueOf(startDateValue.atStartOfDay());
+            LocalDateTime endDateTime = endDateValue.atTime(23, 59, 59);
+            end = Timestamp.valueOf(endDateTime);
+            // Rest of the code...
+        }
         try{
             connection = DriverManager.getConnection("jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db", "csce331_550_01_user", "cSCUE8w9");
-            CallableStatement statement = connection.prepareCall("{call sales_report(?, ?)}");
-            statement.setTimestamp(1, start);
-            statement.setTimestamp(2, end);
-            ResultSet resultSet = statement.executeQuery();
-    
-            // Clear the table
-            salesTable.getItems().clear();
-    
-            // Loop through the result set and add rows to the table
-            while (resultSet.next()) {
-                String column1 = resultSet.getString("item_name");
-                long column2 = resultSet.getLong("count");
-                // Get more columns as needed
-    
-                RowData row = new RowData(column1, column2);
-                salesTable.getItems().add(row);
+            if (reportType == null) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("NO REPORT SELECTED");
+                alert.setHeaderText("you must select a report type to generate a report");
+                alert.setContentText("Please select a report type to generate a report.");
+
+                alert.showAndWait();
+                return;
             }
+            switch (reportType) {
+                case "sales":
+                if(start == null || end == null){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("NO DATE SELECTED");
+                    alert.setHeaderText("you must select a date to generate a report");
+                    alert.setContentText("Please select a date to generate a report.");
+
+                    alert.showAndWait();
+                    return;
+                }
+                CallableStatement statement = connection.prepareCall("{call sales_report(?, ?)}");
+                statement.setTimestamp(1, start);
+                statement.setTimestamp(2, end);
+                ResultSet resultSet = statement.executeQuery();
+        
+                // Clear the table
+                salesTable.getItems().clear();
+        
+                // Loop through the result set and add rows to the table
+                while (resultSet.next()) {
+                    String column1 = resultSet.getString("item_name");
+                    long column2 = resultSet.getLong("count");
+                    // Get more columns as needed
+        
+                    RowData row = new RowData(column1, column2,null);
+                    salesTable.getItems().add(row);
+                }
+                break;
+                case "usage":
+                if(start == null || end == null){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("NO DATE SELECTED");
+                    alert.setHeaderText("you must select a date to generate a report");
+                    alert.setContentText("Please select a date to generate a report.");
+
+                    alert.showAndWait();
+                    return;
+                }
+                CallableStatement statement2 = connection.prepareCall("{call product_usage(?, ?)}");
+                salesName.setText("Date");
+                statement2.setTimestamp(1, start);
+                statement2.setTimestamp(2, end);
+                resultSet = statement2.executeQuery();
+                salesTable.getItems().clear();
+                while (resultSet.next()) {
+                    String column1 = resultSet.getString("date");
+                    long column2 = resultSet.getLong("count");
+                    RowData row = new RowData(column1, column2,null);
+                    salesTable.getItems().add(row);
+                }
+                break;
+                
+                case "excess":
+                    if (start ==null) {
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("NO DATE SELECTED");
+                        alert.setHeaderText("you must select a date to generate a report");
+                        alert.setContentText("Please select a date to generate a report.");
     
+                        alert.showAndWait();
+                        return;
+                    }
+                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?)}");
+                    statement3.setTimestamp(1, start);
+                    resultSet = statement3.executeQuery();
+                    salesTable.getItems().clear();
+                    while (resultSet.next()) {
+                        String column1 = resultSet.getString("name_of_item");
+                        RowData row = new RowData(column1, 0,null);
+                        salesTable.getItems().add(row);
+                    }
+                    break;
+                case "pairs":
+                    CallableStatement statement4 = connection.prepareCall("{call sells_together(?,?)}");
+                    statement4.setTimestamp(1, start);
+                    statement4.setTimestamp(2, end);
+                    resultSet = statement4.executeQuery();
+                    salesTable.getItems().clear();
+                    while (resultSet.next()) {
+                        String column1 = resultSet.getString("item_1");
+                        String column2 = resultSet.getString("item_2");
+                        long column3 = resultSet.getLong("total_times_combined");
+                        RowData row = new RowData(column1, column3, column2);
+                        salesTable.getItems().add(row);
+                    }
+                    break;
+
+        }
+        startDate.setValue(null);
+        endDate.setValue(null);
         }catch(SQLException e){
-            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("SQL ERROR");
+            alert.setHeaderText("Database not connected");
+            alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+            alert.showAndWait();
+            return;
         }
     }
 
     public static class RowData {
     private final SimpleStringProperty column1;
     private final LongProperty column2;
-    // Add more properties as needed
+    private final SimpleStringProperty column3;
 
-    public RowData(String column1, long column2) {
+    public RowData(String column1, long column2, String column3) {
         this.column1 = new SimpleStringProperty(column1);
         this.column2 = new SimpleLongProperty(column2);
+        if (column3 != null) {
+            this.column3 = new SimpleStringProperty(column3);
+        } else {
+            this.column3 = new SimpleStringProperty("");
+        }
     }
 
-    public String getColumn1() { return column1.get(); }
-    public long getColumn2() { return column2.get(); }
-    // Add more getters as needed
+    public String getColumn1() {
+        return column1.get();
+    }
+
+    public long getColumn2() {
+        return column2.get();
+    }
+
+    public String getColumn3() {
+        return column3.get();
+    }
 }
 
     //adds the items to the table
@@ -286,8 +451,14 @@ public class PrimaryController implements Initializable {
                     tableView.getItems().add(new DataItem(name, quantity, stock));
                 }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("SQL ERROR");
+            alert.setHeaderText("Database not connected");
+            alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+            alert.showAndWait();
+            return;
         }
     }
     public static class DataItem {

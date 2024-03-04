@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -10,6 +11,8 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <SplitPane id="splitPane" dividerPositions="0.40468227424749165" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ED6F13;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
   <items>
@@ -71,27 +74,47 @@
               </panes>
             </Accordion>
             <Button fx:id="stockBtn" layoutX="20.0" layoutY="312.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="33.0" prefWidth="200.0" styleClass="buttons" text="Update and Add Item" />
-            <Button fx:id="logOut" layoutX="20.0" layoutY="351.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="33.0" prefWidth="200.0" styleClass="buttons" text="LogOUt" />
-            <Button fx:id="stockBtn1" layoutX="20.0" layoutY="273.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="33.0" prefWidth="200.0" styleClass="buttons" text="Reports" />
+            <Button id="logoutBtn" fx:id="logOut" layoutX="20.0" layoutY="351.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="33.0" prefWidth="200.0" text="Logout" textFill="RED" />
+            <RadioButton fx:id="salesBtn" layoutX="21.0" layoutY="250.0" mnemonicParsing="false" text="Sales" />
+            <RadioButton fx:id="usageBtn" layoutX="82.0" layoutY="250.0" mnemonicParsing="false" text="Usage" />
+            <RadioButton fx:id="restockBtn" layoutX="144.0" layoutY="250.0" mnemonicParsing="false" text="Restock" />
+            <RadioButton fx:id="excessBtn" layoutX="21.0" layoutY="277.0" mnemonicParsing="false" text="Excess" />
+            <RadioButton fx:id="pairsBtn" layoutX="82.0" layoutY="277.0" mnemonicParsing="false" text="Sells together" />
+            <Text layoutX="23.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Report Select">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Text>
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <TableView id="statTable" fx:id="tableView" layoutX="14.0" layoutY="14.0" prefHeight="158.0" prefWidth="330.0" styleClass=".table-view">
+            <TableView id="statTable" fx:id="tableView" layoutX="14.0" layoutY="23.0" prefHeight="144.0" prefWidth="330.0" styleClass=".table-view">
               <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="51.0" styleClass="tableCols" text="Item Name" />
                 <TableColumn fx:id="stockColumn" prefWidth="99.0" styleClass="tableCols" text="Stock" />
                 <TableColumn fx:id="priceColumn" prefWidth="75.0" styleClass="tableCols" text="Price" />
               </columns>
             </TableView>
-            <TableView id="statTable" fx:id="salesTable" layoutX="14.0" layoutY="186.0" prefHeight="158.0" prefWidth="330.0" styleClass=".table-view">
+            <TableView id="statTable" fx:id="salesTable" layoutX="14.0" layoutY="196.0" prefHeight="158.0" prefWidth="330.0" styleClass=".table-view">
                <columns>
                   <TableColumn fx:id="salesName" prefWidth="75.0" styleClass="tableCols" text="Item Name" />
                   <TableColumn fx:id="salesQuantity" prefWidth="75.0" styleClass="tableCols" text="Amount" />
+                  <TableColumn fx:id="item2Name" prefWidth="75.0" />
                </columns>
             </TableView>
-            <DatePicker fx:id="startDate" layoutX="14.0" layoutY="359.0" prefHeight="25.0" prefWidth="86.0" />
-            <DatePicker fx:id="endDate" layoutX="111.0" layoutY="359.0" prefHeight="25.0" prefWidth="136.0" />
-            <Button layoutX="281.0" layoutY="359.0" mnemonicParsing="false" onAction="#salesTableBtnAction" text="Submit" />
+            <DatePicker fx:id="startDate" layoutX="13.0" layoutY="361.0" prefHeight="25.0" prefWidth="127.0" />
+            <DatePicker fx:id="endDate" layoutX="148.0" layoutY="361.0" prefHeight="25.0" prefWidth="127.0" />
+            <Button layoutX="290.0" layoutY="361.0" mnemonicParsing="false" onAction="#salesTableBtnAction" text="Submit" />
+            <Text layoutX="14.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Information">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text layoutX="15.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reports">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
          </children></AnchorPane>
   </items>
 </SplitPane>

@@ -83,3 +83,14 @@ F1D59D
     -fx-padding: 2px;
 
 }
+#logoutBtn{
+    -fx-background-color: #33816c;
+    -fx-text-fill: #e7be45;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    /* -fx-font: 8px; */
+    padding: 10px;
+    -fx-border-color: #5E503C;
+    -fx-border-width: 2px;
+}
