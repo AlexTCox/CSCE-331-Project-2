@@ -22,7 +22,7 @@ BEGIN
     INNER JOIN (
         -- Subquery to calculate total usage of each ingredient within the specified time period
         SELECT ingredient_id, SUM(count) AS total_sales
-        FROM product_usage_ind(start_date, end_date)
+        FROM product_usage(start_date, end_date)
         GROUP BY ingredient_id
     ) p ON i.id = p.ingredient_id
     -- Filter to include only ingredients with usage less than 10% of their stock
