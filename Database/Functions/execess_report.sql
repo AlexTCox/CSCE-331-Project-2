@@ -7,7 +7,7 @@
 
 -- Returns: Table containing the name of each ingredient, its current stock, and the total usage within the specified time period.
 
-CREATE FUNCTION excess_report_new(start_date timestamp, end_date timestamp)
+CREATE FUNCTION excess_report(start_date timestamp, end_date timestamp)
 RETURNS TABLE (
     name text,
     stock bigint,
