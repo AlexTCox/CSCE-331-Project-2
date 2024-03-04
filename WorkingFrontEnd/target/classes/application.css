@@ -1,0 +1,96 @@
+/* color pallet  
+ED6F13
+E7BE45
+F1D59D
+5E503C
+31282B*/
+
+
+.buttons{
+    -fx-background-color: #E7BE45;
+    -fx-text-fill: #5E503C;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    /* -fx-font: 8px; */
+    padding: 10px;
+    -fx-border-color: #5E503C;
+    -fx-border-width: 2px;
+}
+
+.scrollPane{
+    -fx-background-color: #F1D59D;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+
+.scrollPane{
+    background-color: transparent;
+}
+.scrollPane .scroll-bar{
+    -fx-background-color: #5E503C;
+}
+
+.scrollPane > .corner {
+    -fx-background-color: #5E503C;
+}
+.scrollPane .scroll-bar .thumb {
+    -fx-background-color: #F1D59D;
+    -fx-background-radius: 10px;
+}
+
+.accordian{
+    -fx-background-color: transparent;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+.accordian .titledPane > .title{
+    -fx-background-color: #E7BE45;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+.accordian .titledPane > .content{
+    -fx-background-color: transparent;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+
+.checkBox{
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #5E503C;
+    -fx-font-weight: bold;
+    -fx-border-width: 2px;
+}
+.checkBox .box{
+    -fx-background-color: #E7BE45;
+    -fx-border-color: #5E503C;
+}
+
+
+.checkBox .box:hover{
+    -fx-background-color: #F1D59D;
+    -fx-border-color: #5E503C;
+}
+
+#splitPane  .split-pane-divider {
+    -fx-background-color: #E7BE45;
+    -fx-padding: 2px;
+
+}
+#logoutBtn{
+    -fx-background-color: #33816c;
+    -fx-text-fill: #e7be45;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    /* -fx-font: 8px; */
+    padding: 10px;
+    -fx-border-color: #5E503C;
+    -fx-border-width: 2px;
+}

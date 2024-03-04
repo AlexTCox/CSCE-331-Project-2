@@ -21,6 +21,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -96,6 +98,8 @@ public class StockController implements Initializable{
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
+        stage.setTitle("Manager View");
+        scene.getStylesheets().add("application.css");
         stage.show();
     }
 
@@ -149,8 +153,14 @@ public class StockController implements Initializable{
             }
             // ingredientPane.setFitToHeight(true);
             // ingredientPane.setFitToWidth(true);
-        } catch (SQLException ex) {
-            System.out.println("failed");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("SQL ERROR");
+            alert.setHeaderText("Database not connected");
+            alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+            alert.showAndWait();
+            return;
         }
         }
 
@@ -189,8 +199,14 @@ public class StockController implements Initializable{
                 });
                 tableItems.getChildren().add(radioButton);
             }
-        } catch (SQLException ex) {
-            System.out.println("failied");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("SQL ERROR");
+            alert.setHeaderText("Database not connected");
+            alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+            alert.showAndWait();
+            return;
         }
     }
     //oop needed to condense the amount of times i did this
@@ -237,6 +253,14 @@ public class StockController implements Initializable{
             if (!priceText.isEmpty()) {
                 try {
                     double newPrice = Double.parseDouble(priceText);
+                    if(newPrice <= 0){
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("PRIVE ERROR");
+                        alert.setHeaderText("FAILED TO UPDATE PRICE");
+                        alert.setContentText("Ensure you entered a price that is more then 0 ");
+                        alert.showAndWait();
+                        return;
+                    }
                     String tableName = category;
                     if("ingredients".equals(tableName)){
                         priceName="add_on_price";
@@ -250,20 +274,47 @@ public class StockController implements Initializable{
                         if (rowsAffected > 0) {
                             System.out.println("Price updated successfully.");
                         } else {
-                            System.out.println("Failed to update price.");
+                            Alert alert = new Alert(AlertType.ERROR);
+                            alert.setTitle("PRICE ERROR");
+                            alert.setHeaderText("FAILED TO UPDATE PRICE");
+                            alert.setContentText("Ensure you entered a price and that you are connected to the internet");
+                            alert.showAndWait();
+                            return;
                         }
                         clearFields();
-                    } catch (SQLException ex) {
-                        System.out.println("Error updating price: " + ex.getMessage());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("SQL ERROR");
+                        alert.setHeaderText("Database not connected");
+                        alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+                        alert.showAndWait();
+                        return;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid price format.");
+                    e.printStackTrace();
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("PRICE ERROR");
+                    alert.setHeaderText("INVAID PRICE FORMAT");
+                    alert.setContentText("Ensure you are entering a number" + e);
+                    alert.showAndWait();
+                    return;
                 }
             } else {
-                System.out.println("Please enter a price.");
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("PRICE ERROR");
+                    alert.setHeaderText("NO PRICE ENTERED");
+                    alert.setContentText("Ensure you are entering a price");
+                    alert.showAndWait();
+                    return;
             }
         } else {
-            System.out.println("Please select a menu item.");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ITEM ERROR");
+            alert.setHeaderText("NO ITEM SELECTED");
+            alert.setContentText("Ensure you are selecting an item");
+            alert.showAndWait();
+            return;
         }
     }
 
@@ -277,6 +328,14 @@ public class StockController implements Initializable{
                 try{
                     String itemName = selectedRadioButton.getText();
                     int newStock = Integer.parseInt(stockField.getText());
+                    if(newStock <= 0){
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("STOCK ERROR");
+                        alert.setHeaderText("INVAID STOCK");
+                        alert.setContentText("Ensure you are entering a stock that is more then 0 ");
+                        alert.showAndWait();
+                        return;
+                    }
                     try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
                         PreparedStatement statement = connection.prepareStatement("UPDATE ingredients SET stock = ? WHERE name = ?")) {
                         statement.setDouble(1, newStock);
@@ -288,17 +347,39 @@ public class StockController implements Initializable{
                             System.out.println("Failed to update stock.");
                         }
                         clearFields();
-                    } catch (SQLException ex) {
-                        System.out.println("Error updating stock: " + ex.getMessage());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("SQL ERROR");
+                        alert.setHeaderText("Database not connected");
+                        alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+                        alert.showAndWait();
+                        return;
                     }
                 }catch (NumberFormatException e) {
-                    System.out.println("Invalid price format.");
+                    e.printStackTrace();
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("PRICE ERROR");
+                    alert.setHeaderText("INVAID PRICE FORMAT");
+                    alert.setContentText("Ensure you are entering a number" + e);
+                    alert.showAndWait();
+                    return;
                 }
             }else{
-                System.out.println("Please enter a stock.");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("STOCK ERROR");
+                alert.setHeaderText("INVAID STOCK");
+                alert.setContentText("Ensure you are entering a stock");
+                alert.showAndWait();
+                return;
             }
         }else{
-            System.out.println("Please select a menu item.");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ITEM ERROR");
+            alert.setHeaderText("NO ITEM SELECTED");
+            alert.setContentText("Ensure you are selecting an item");
+            alert.showAndWait();
+            return;
         }
     }
     // @FXML
@@ -325,6 +406,14 @@ public class StockController implements Initializable{
                 int newStock = Integer.parseInt(stockText);
                 double newPrice = Double.parseDouble(priceText);
                 int newMinStock = Integer.parseInt(minStockText);
+                if(newStock <= 0 || newPrice <= 0 || newMinStock <= 0){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("FORMAT ERROR");
+                    alert.setHeaderText("INVALID FORMAT");
+                    alert.setContentText("Ensure all numbers are above 0 and all fields are completed");
+                    alert.showAndWait();
+                    return;
+                }
                 statement = connection.prepareStatement("INSERT INTO ingredients (name, stock, add_on_price, min_stock) VALUES (?, ?, ?, ?)");
                 statement.setString(1, nameText);
                 statement.setInt(2, newStock);
@@ -335,6 +424,14 @@ public class StockController implements Initializable{
                 String[] ingredientsArray = ingredientsText.split(",");
                 Array ingredients = connection.createArrayOf("TEXT", ingredientsArray);
                 double menuItemPrice = Double.parseDouble(priceText);
+                if(menuItemPrice <= 0 || ingredientsArray.length <= 0){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("FORMAT ERROR");
+                    alert.setHeaderText("INVALID FORMAT");
+                    alert.setContentText("Ensure all numbers are above 0 and all fields are completed");
+                    alert.showAndWait();
+                    return;
+                }
                 menuFxn = connection.prepareCall("{? = CALL new_menu_option(?, ?, ?)}");
                 menuFxn.registerOutParameter(1, Types.BOOLEAN);
                 menuFxn.setString(2, nameText);
@@ -345,12 +442,24 @@ public class StockController implements Initializable{
             case "drinks":
                 String size = nameText;
                 double drinkPrice = Double.parseDouble(priceText);
+                if(drinkPrice <= 0){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("FORMAT ERROR");
+                    alert.setHeaderText("INVALID FORMAT");
+                    alert.setContentText("Ensure all numbers are above 0 and all fields are completed");
+                    alert.showAndWait();
+                    return;
+                }
                 statement = connection.prepareStatement("INSERT INTO drinks (size, price) VALUES (?, ?)");
                 statement.setString(1, size);
                 statement.setDouble(2, drinkPrice);
                 break;
             default:
-                throw new IllegalArgumentException("Invalid category: " + category);
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("CATEGORY ERROR");
+                alert.setHeaderText("INVALID CATEGORY");
+                alert.setContentText("THIS SHOULD BE IMPOSSIBLE");
+                alert.showAndWait();
         }
         if(statement != null){
             rowsAffected = statement.executeUpdate();
@@ -359,15 +468,32 @@ public class StockController implements Initializable{
             rowsAffected = menuFxn.executeUpdate();
         }
         if (rowsAffected > 0 ) {
-            System.out.println("Item added successfully.");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ITEM ERROR");
+            alert.setHeaderText("FAILED TO ADD ITEM");
+            alert.setContentText("Ensure you entered all fields and that you are connected to the internet");
+            alert.showAndWait();
+            return;
         } else {
             System.out.println("Failed to add item.");
         }
         clearFields();
-    } catch (SQLException ex) {
-        System.out.println("Error adding item: " + ex.getMessage());
+    } catch (SQLException e) {
+        e.printStackTrace();
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("SQL ERROR");
+        alert.setHeaderText("Database not connected");
+        alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
+        alert.showAndWait();
+        return;
     } catch (NumberFormatException e) {
-        System.out.println("Invalid number format.");
+        e.printStackTrace();
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("FIELD ERROR");
+        alert.setHeaderText("INVAID FORMAT");
+        alert.setContentText("Enusure all fields are completed" + e);
+        alert.showAndWait();
+        return;
     }
 }
 //general initialize. most likley wont use here

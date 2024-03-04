@@ -7,26 +7,25 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="618.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Waiter">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="618.0" style="-fx-background-color: #ED6F13;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Waiter">
    <children>
-      <ScrollPane layoutX="50.0" layoutY="117.0" prefHeight="200.0" prefWidth="200.0">
+      <ScrollPane fitToWidth="true" layoutX="26.0" layoutY="117.0" prefHeight="200.0" prefWidth="251.0" style="-fx-background-color: #E7BE45;">
          <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F1D59D;">
                <children>
-                  <VBox fx:id="hboxx_menu" layoutX="33.0" layoutY="22.0" />
+                  <VBox fx:id="hboxx_menu" cacheShape="false" layoutX="33.0" layoutY="22.0" style="-fx-background-color: F1D59D;" />
                </children>
             </AnchorPane>
          </content>
       </ScrollPane>
       <Label fx:id="myLabel" alignment="CENTER" layoutX="404.0" layoutY="275.0" prefHeight="18.0" prefWidth="104.0" text="Order: $0" />
       <ListView fx:id="myListView" layoutX="356.0" layoutY="66.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button layoutX="24.0" layoutY="40.0" mnemonicParsing="false" onAction="#Menu_Query" text="Menu Items" />
-      <Button layoutX="127.0" layoutY="40.0" mnemonicParsing="false" onAction="#Addon_Query" text="Add-Ons" />
-      <Button layoutX="356.0" layoutY="304.0" mnemonicParsing="false" onAction="#ClearOrder" text="Clear Order" />
-      <Button layoutX="224.0" layoutY="40.0" mnemonicParsing="false" onAction="#Drink_Query" text="Drinks" />
-      <Button layoutX="468.0" layoutY="304.0" mnemonicParsing="false" onAction="#SubmitOrder" text="Submit Order" />
+      <Button layoutX="24.0" layoutY="40.0" mnemonicParsing="false" onAction="#Menu_Query" styleClass="buttons" text="Menu Items" />
+      <Button layoutX="127.0" layoutY="40.0" mnemonicParsing="false" onAction="#Addon_Query" styleClass="buttons" text="Add-Ons" />
+      <Button layoutX="356.0" layoutY="304.0" mnemonicParsing="false" onAction="#ClearOrder" styleClass="buttons" text="Clear Order" />
+      <Button layoutX="224.0" layoutY="40.0" mnemonicParsing="false" onAction="#Drink_Query" styleClass="buttons" text="Drinks" />
+      <Button layoutX="468.0" layoutY="304.0" mnemonicParsing="false" onAction="#SubmitOrder" styleClass="buttons" text="Submit Order" />
       <Label fx:id="myLabel1" layoutX="442.0" layoutY="345.0" />
-      <Button layoutX="356.0" layoutY="341.0" mnemonicParsing="false" onAction="#showOrderID" prefHeight="25.0" prefWidth="77.0" text="Show ID" />
-      <Button fx:id="logoutBtn" layoutX="508.0" layoutY="14.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="25.0" prefWidth="77.0" text="Logout" />
+      <Button fx:id="logoutBtn" layoutX="508.0" layoutY="14.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="25.0" prefWidth="77.0" styleClass="buttons" text="Logout" />
    </children>
 </AnchorPane>

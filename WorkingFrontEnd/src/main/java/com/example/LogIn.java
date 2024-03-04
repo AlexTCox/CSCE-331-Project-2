@@ -92,6 +92,7 @@ public class LogIn {
                  wronglogin.setText("Server");
                  // Redirecting to the server dashboard scene
                  m.changeuserScene("WaiterView.fxml");
+                 
              }
 
          }else
