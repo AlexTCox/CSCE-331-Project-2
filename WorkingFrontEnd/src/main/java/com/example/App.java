@@ -18,7 +18,7 @@ public class App extends Application {
         // Make the primary stage non-resizable
         primarystage.setResizable(false);
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Scene scene = new Scene(fxmlLoader.load());
         primarystage.setTitle("Login");
         primarystage.setScene(scene);
         scene.getStylesheets().add("application.css");

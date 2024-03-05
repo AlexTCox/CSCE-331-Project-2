@@ -20,7 +20,7 @@
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <ScrollPane id="stockScroll" fx:id="ingredientPane" layoutX="42.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane">
+            <ScrollPane id="stockScroll" fx:id="ingredientPane" layoutX="15.0" layoutY="111.0" prefHeight="200.0" prefWidth="248.0" style="-fx-background-color: transparent;" styleClass="scrollPane">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="200.0" style="-fx-background-color: transparent;">
                      <children>
@@ -54,12 +54,21 @@
                         <TextField fx:id="newStockTextField" promptText="stock" visible="false" GridPane.rowIndex="1" />
                         <TextField fx:id="minStockTextField" promptText="min stock" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Button fx:id="submitItemBtn" mnemonicParsing="false" onAction="#newItemBtn" prefHeight="25.0" prefWidth="148.0" styleClass="buttons" text="Submit" visible="false" GridPane.rowIndex="2" />
-                        <TextField fx:id="ingredientsField" visible="false" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
             </VBox>
             <Button fx:id="exiButton" layoutX="42.0" layoutY="337.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="47.0" prefWidth="200.0" styleClass="buttons" text="Exit" />
+            <ScrollPane id="stockScroll" fx:id="menuIngredients" layoutX="342.0" layoutY="18.0" prefHeight="174.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane" visible="false">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: transparent;">
+                     <children>
+                        <VBox id="tableItems" fx:id="menuIngredVbox" layoutY="-4.0" prefHeight="162.0" prefWidth="200.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+            <Text fx:id="currStock" layoutX="15.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="200.0" />
          </children></AnchorPane>
   </items>
 </SplitPane>
