@@ -314,6 +314,7 @@ public class Waiter implements Initializable{
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
+        stage.setTitle("Login");
         stage.show();
         }catch(IOException e) {
             e.printStackTrace();

@@ -268,6 +268,19 @@ public class PrimaryController implements Initializable {
         tableView.getItems().removeIf(item -> item.getName().equals(itemName));
     }
 
+    //change scene to Waiter
+    @FXML
+    public void changeSceneWaiter(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("WaiterView.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Waiter");
+        scene.getStylesheets().add("application.css");
+        stage.show();
+    }
+
     //logout button just changes back to login fxml
     @FXML
     public void logoutBtnAction(ActionEvent event){

@@ -54,6 +54,8 @@ public class StockController implements Initializable{
     @FXML
     private Button stockSetBtn;
     @FXML
+    private Button waiterBtn;
+    @FXML
     private TextField priceField;
     @FXML
     private Button priceButton;
@@ -123,11 +125,10 @@ public class StockController implements Initializable{
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
-        stage.setTitle("Manager View");
+        stage.setTitle("Manager");
         scene.getStylesheets().add("application.css");
         stage.show();
     }
-
 
     //controls what fields are visable when ingredient category is open and populates the ingredient box
     @FXML
@@ -720,6 +721,7 @@ private void refreshVBox() {
             System.out.println("Invalid category");
         
     }
+
     priceButton.setVisible(false);
     priceField.setVisible(false);
     stockField.setVisible(false);
@@ -727,7 +729,7 @@ private void refreshVBox() {
     menuIngredients.setVisible(false);
     setFieldsVisibility(false, false, false, false, false);
     clearFields();
-
+    currStock.setText("");
 }
 
 
