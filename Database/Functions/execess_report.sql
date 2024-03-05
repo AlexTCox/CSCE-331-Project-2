@@ -5,27 +5,18 @@
 -- @start_date: The start date of the time period for which to generate the report.
 -- @end_date: The end date of the time period for which to generate the report.
 
--- Returns: Table containing the name of each ingredient, its current stock, and the total usage within the specified time period.
+-- Returns: Table containing the name of each ingredient.
 
 CREATE FUNCTION excess_report(start_date timestamp, end_date timestamp)
-RETURNS TABLE (
-    name text,
-    stock bigint,
-    total_usage bigint
-)
+RETURNS TABLE (name_of_item text)
 AS $$
 BEGIN
-    -- Query to retrieve ingredients and their usage within the specified time period
+    -- Query to retrieve the name of each ingredient used within the specified time period
+    -- and join it with the stock information from the ingredients table to filter out those with usage less than 10% of their stock
     RETURN QUERY 
-    SELECT i.name, i.stock, p.total_sales
-    FROM ingredients i
-    INNER JOIN (
-        -- Subquery to calculate total usage of each ingredient within the specified time period
-        SELECT ingredient_id, SUM(count) AS total_sales
-        FROM product_usage(start_date, end_date)
-        GROUP BY ingredient_id
-    ) p ON i.id = p.ingredient_id
-    -- Filter to include only ingredients with usage less than 10% of their stock
-    WHERE (p.total_sales::float / i.stock) * 100 < 10;
+    SELECT product_usage.name
+    FROM product_usage(start_date, end_date)
+    INNER JOIN ingredients ON ingredients.name = product_usage.name
+    WHERE ((product_usage.count / ingredients.stock) * 100) < 10;
 END;
 $$ LANGUAGE plpgsql;
