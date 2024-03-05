@@ -83,7 +83,8 @@ public class StockController implements Initializable{
     private Text currStock;
     @FXML
     Text selectIngredients;
-
+    @FXML
+    Text newItemText;
 
     ObservableList<Node> checkboxes;
     ArrayList<String> selectedItems = new ArrayList<>();
@@ -118,7 +119,8 @@ public class StockController implements Initializable{
     void btnActionIngredients(ActionEvent event){
 
         category = "ingredients";
-
+        newItemText.setText("Create New Ingredient");
+        nameTextField.setPromptText("Name");
         selectIngredients.setText("");
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
@@ -148,6 +150,8 @@ public class StockController implements Initializable{
 
         selectedItems.clear();
         currStock.setText("");
+        newItemText.setText("Create New Menu Item");
+        nameTextField.setPromptText("Name");
         category = "menu_item";
 
         selectIngredients.setText("Select Ingredients");
@@ -181,6 +185,7 @@ public class StockController implements Initializable{
             }
             checkBoxes.sort(Comparator.comparing(CheckBox::getText));
             menuIngredVbox.getChildren().addAll(checkBoxes);
+            menuIngredients.setContent(menuIngredVbox);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -198,6 +203,8 @@ public class StockController implements Initializable{
     @FXML
     void btnActionInDrink(ActionEvent event){
         category = "drinks";
+        newItemText.setText("Create New Drink Size");
+        nameTextField.setPromptText("Size");
 
 
         stockField.setVisible(false);
@@ -276,6 +283,8 @@ public class StockController implements Initializable{
                         stockSetBtn.setVisible(false);
                         menuIngredients.setVisible(false);
                     }
+                    newItemText.setText("");
+                    selectIngredients.setText("");
                     setFieldsVisibility(false, false, false, false, false);
 
                 });
@@ -495,6 +504,7 @@ public class StockController implements Initializable{
         PreparedStatement statement =null;
         switch (category) {
             case "ingredients":
+                
                 int newStock = Integer.parseInt(stockText);
                 double newPrice = Double.parseDouble(priceText);
                 int newMinStock = Integer.parseInt(minStockText);
@@ -514,6 +524,7 @@ public class StockController implements Initializable{
                 populateVBoxWithQueryResults("SELECT * FROM ingredients;", true);
                 break;
             case "menu_item": 
+                
                 String[] ingredientsArray = selectedItems.toArray(new String[selectedItems.size()]);
                 Array ingredients = connection.createArrayOf("TEXT", ingredientsArray);
                 double menuItemPrice = Double.parseDouble(priceText);
@@ -533,6 +544,7 @@ public class StockController implements Initializable{
                 fxnCalled =true;
                 break;
             case "drinks":
+                
                 String size = nameText;
                 double drinkPrice = Double.parseDouble(priceText);
                 if(drinkPrice <= 0){
