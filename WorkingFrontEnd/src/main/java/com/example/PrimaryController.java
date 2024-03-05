@@ -361,8 +361,9 @@ public class PrimaryController implements Initializable {
                         alert.showAndWait();
                         return;
                     }
-                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?)}");
+                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?, ?)}");
                     statement3.setTimestamp(1, start);
+                    statement3.setTimestamp(2, end );
                     resultSet = statement3.executeQuery();
                     salesTable.getItems().clear();
                     while (resultSet.next()) {
