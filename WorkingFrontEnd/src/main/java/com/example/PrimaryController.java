@@ -161,11 +161,14 @@ public class PrimaryController implements Initializable {
         restockBtn.onActionProperty().set(event -> {
             reportType = "restock";
             endDate.setDisable(true);
+            endDate.setValue(null);
             startDate.setDisable(true);
+            startDate.setValue(null);
         });
         excessBtn.onActionProperty().set(event -> {
             reportType = "excess";
             endDate.setDisable(true);
+            endDate.setValue(null);
             startDate.setDisable(false);
         });
         pairsBtn.onActionProperty().set(event -> {

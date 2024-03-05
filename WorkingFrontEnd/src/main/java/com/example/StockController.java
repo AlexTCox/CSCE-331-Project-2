@@ -209,6 +209,7 @@ public class StockController implements Initializable{
             menuIngredVbox.getChildren().addAll(checkBoxes);
             menuIngredients.setContent(menuIngredVbox);
 
+
         //catch sql errors and display an alert
         } catch (SQLException e) {
             e.printStackTrace();
@@ -629,6 +630,9 @@ public class StockController implements Initializable{
                 menuFxn.setFloat(3, (float) menuItemPrice);
                 menuFxn.setArray(4, ingredients);
                 fxnCalled =true;
+                currStock.setText("");
+                newItemText.setText("");
+                selectIngredients.setText("");
                 break;
 
             case "drinks":

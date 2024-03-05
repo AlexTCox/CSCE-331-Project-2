@@ -45,6 +45,15 @@ public class Waiter implements Initializable{
     List<String> addonList = new ArrayList<>();
     CallableStatement compOrder;
 
+    /**
+    *The Menu_Query function gets every menu item that is in the database and turns them 
+    *into buttons which can then be pressed on the GUI. It will get called
+    *at the beginning and whenever a change happens to a menu item such as
+    *price change and add a new button if a new menu item is made.
+    *@param e Not used but it is available if we want to make the query into a button
+    *@return void Does not return anything but should populate a V Box with the items as buttons
+    *@throws SQLException If database communicatino isn't done correctly
+    */
     public void Menu_Query(ActionEvent e) throws SQLException {
 
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
@@ -135,6 +144,18 @@ public class Waiter implements Initializable{
         }
     }
 
+/**
+ * When the drinks category is selected the Vbox and scroll pane element are popoulated.
+ * The action event argument is in place for compatablity with javaFX controllers.
+ * When the Vbox is populated it is populated with javaFX buttons that add to the order.
+ * 
+ * <p>
+ * This method executes on button press every time. Even if the Vbox is already populated
+ * 
+ * @param e An action event not defined by the user. Only used to run on button press.
+ * @return void
+ * @throws SQLException if not connected to database
+*/
     public void Drink_Query(ActionEvent e) throws SQLException {
 
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
@@ -180,6 +201,17 @@ public class Waiter implements Initializable{
         }
     }
 
+    /**
+    *Submits a new order to the database, clearing the current order data from the GUI upon successful execution.
+    *This method first establishes a connection to the database using provided credentials, retrieves a new order ID by executing a SQL query,
+    *and then submits order details including menu items, drinks, and add-ons. Finally, it clears the current order data from the interface.
+    *@param e the ActionEvent triggered by submitting the order, not used in the method but required for interface compatibility
+    *@throws SQLException if there is any issue with the database connection, executing queries, or other SQL-related operations.
+    *This includes issues such as invalid credentials, unreachable database server, malformed SQL queries, and failure in executing the * prepared statements.
+    *This method directly affects the state of the database and the GUI, and it handles all SQLExceptions by printing stack trace.
+    *Proper exception handling and user feedback mechanisms should be implemented in a production environment.
+    *@return is void.
+    */
     public void SubmitOrder(ActionEvent e) throws SQLException {
 
         String url = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
@@ -256,7 +288,11 @@ public class Waiter implements Initializable{
         index = 0;
     }
 
-
+    /**
+     * Removes the last item from the list and updates the order total.
+     * @param  e  The ActionEvent that triggers the removal of the last item
+     * @returns void
+     */
     public void RemoveLast(ActionEvent e) {
         if (index != 0) {
             int listSize = myListView.getItems().size(); // Get size of list
@@ -270,6 +306,13 @@ public class Waiter implements Initializable{
         }
     }
 
+    /**
+     * Clears the entire order by removing all items from the lists
+     * and resetting the order total to zero.
+     *
+     * @param e The ActionEvent that triggers the clearing of the order.
+     * @returns void
+     */
     public void ClearOrder(ActionEvent e) {
         if (index != 0) {
             myListView.getItems().clear();
@@ -289,23 +332,19 @@ public class Waiter implements Initializable{
     private Label myLabel;
     @FXML
     private Label myLabel1;
-    public void showOrderID(ActionEvent e) {
-        myLabel1.setText("ID: " + orderID);
-        // myLabel1.setText(menuList.getFirst());
-    }
-
 
     @FXML
     private ListView<String> myListView;
     private double price = 0;
     private int index = 0;
-
-    public void add(ActionEvent e) {
-        price += 2;
-        myLabel.setText("Order: $" + price);
-        myListView.getItems().add(index, "Pizza $2.00");
-        index += 1;
-    }
+    
+    /**
+     * Changes to manager page when the logout button is pressed
+     * 
+     * @param event
+     * @throws IOException if FXML is not in the resources folder or found in project
+     * @return void
+     */
 
     @FXML
     public void logoutBtnAction(ActionEvent event){
@@ -323,20 +362,6 @@ public class Waiter implements Initializable{
 
     @FXML
     private BorderPane mainView;
-
-    @FXML
-    private void handleChangeView(ActionEvent event) {
-        try {
-            String menuItemID = ((Button) event.getSource()).getId();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(menuItemID + ".fxml"));
-            loader.setController(this);
-
-            mainView.setCenter(loader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
