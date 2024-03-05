@@ -59,16 +59,17 @@
                </children>
             </VBox>
             <Button fx:id="exiButton" layoutX="42.0" layoutY="337.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="47.0" prefWidth="200.0" styleClass="buttons" text="Exit" />
-            <ScrollPane id="stockScroll" fx:id="menuIngredients" layoutX="342.0" layoutY="18.0" prefHeight="174.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane" visible="false">
+            <ScrollPane id="stockScroll" fx:id="menuIngredients" layoutX="342.0" layoutY="36.0" prefHeight="170.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane" visible="false">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: transparent;">
                      <children>
-                        <VBox id="tableItems" fx:id="menuIngredVbox" layoutY="-4.0" prefHeight="162.0" prefWidth="200.0" />
+                        <VBox id="tableItems" fx:id="menuIngredVbox" layoutY="4.0" prefHeight="154.0" prefWidth="200.0" />
                      </children>
                   </AnchorPane>
                </content>
             </ScrollPane>
             <Text fx:id="currStock" layoutX="15.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="200.0" />
+            <Text fx:id="selectIngredients" layoutX="342.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="200.0" />
          </children></AnchorPane>
   </items>
 </SplitPane>

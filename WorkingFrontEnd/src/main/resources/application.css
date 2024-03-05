@@ -95,7 +95,7 @@ F1D59D
     -fx-border-width: 2px;
 }
 
-.radio-button{
+.radioBtn{
     -fx-background-color: transparent;
     -fx-padding: 2px;
     -fx-font-size: 13px;

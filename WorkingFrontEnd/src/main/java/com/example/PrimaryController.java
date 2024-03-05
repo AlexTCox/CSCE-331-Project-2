@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class PrimaryController implements Initializable {
     RadioButton excessBtn;
     @FXML
     RadioButton pairsBtn;
+
 
 
     private static Connection connection;
