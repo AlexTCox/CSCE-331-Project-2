@@ -306,6 +306,8 @@ public class PrimaryController implements Initializable {
                     alert.showAndWait();
                     return;
                 }
+                salesName.setText("Item");
+                item2Name.setText("");
                 CallableStatement statement = connection.prepareCall("{call sales_report(?, ?)}");
                 statement.setTimestamp(1, start);
                 statement.setTimestamp(2, end);
@@ -335,7 +337,8 @@ public class PrimaryController implements Initializable {
                     return;
                 }
                 CallableStatement statement2 = connection.prepareCall("{call product_usage(?, ?)}");
-                salesName.setText("Date");
+                salesName.setText("Item");
+                item2Name.setText("");
                 statement2.setTimestamp(1, start);
                 statement2.setTimestamp(2, end);
                 resultSet = statement2.executeQuery();
@@ -370,6 +373,8 @@ public class PrimaryController implements Initializable {
                     break;
                 case "pairs":
                     CallableStatement statement4 = connection.prepareCall("{call sells_together(?,?)}");
+                    salesName.setText("Item 1");
+                    item2Name.setText("Item 2");
                     statement4.setTimestamp(1, start);
                     statement4.setTimestamp(2, end);
                     resultSet = statement4.executeQuery();
@@ -383,6 +388,8 @@ public class PrimaryController implements Initializable {
                     }
                     break;
                 case "restock":
+                    salesName.setText("Item");
+                    item2Name.setText("");
                     CallableStatement statement5 = connection.prepareCall("{call restock()}");
                     resultSet = statement5.executeQuery();
                     salesTable.getItems().clear();
