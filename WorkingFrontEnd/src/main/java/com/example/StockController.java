@@ -283,7 +283,7 @@ public class StockController implements Initializable{
             }
             // Sort the radio buttons before adding them to the VBox
 
-            radioButtons.sort(Comparator.comparing(radioButton -> ((itemData) radioButton.getUserData()).getName()));
+            radioButtons.sort(Comparator.comparing(radioButton -> ((itemData) radioButton.getUserData()).getName().toLowerCase()));
             tableItems.getChildren().addAll(radioButtons);
             ingredientPane.setContent(tableItems);
         } catch (SQLException e) {
