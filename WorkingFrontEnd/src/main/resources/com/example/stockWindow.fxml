@@ -20,11 +20,11 @@
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <ScrollPane id="stockScroll" fx:id="ingredientPane" layoutX="42.0" layoutY="111.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane">
+            <ScrollPane id="stockScroll" fx:id="ingredientPane" layoutX="15.0" layoutY="111.0" prefHeight="200.0" prefWidth="248.0" style="-fx-background-color: transparent;" styleClass="scrollPane">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="200.0" style="-fx-background-color: transparent;">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="246.0" style="-fx-background-color: transparent;">
                      <children>
-                        <VBox id="tableItems" fx:id="tableItems" prefHeight="206.0" prefWidth="200.0" />
+                        <VBox id="tableItems" fx:id="tableItems" prefHeight="206.0" prefWidth="248.0" />
                      </children>
                   </AnchorPane>
               </content>
@@ -32,21 +32,26 @@
             <Button id="ingredientBtn" layoutX="14.0" layoutY="64.0" mnemonicParsing="false" onAction="#btnActionIngredients" prefHeight="25.0" prefWidth="86.0" styleClass="buttons" text="Ingredient" />
             <Button id="menuBtn" layoutX="103.0" layoutY="64.0" mnemonicParsing="false" onAction="#btnActionInMenu" styleClass="buttons" text="Menu Item" />
             <Button id="drinkBtn" layoutX="188.0" layoutY="64.0" mnemonicParsing="false" onAction="#btnActionInDrink" prefHeight="25.0" prefWidth="74.0" styleClass="buttons" text="Drink" />
-            <VBox layoutX="299.0" layoutY="117.0" prefHeight="200.0" prefWidth="275.0">
+            <VBox layoutX="299.0" layoutY="117.0" prefHeight="227.0" prefWidth="285.0">
                <children>
                   <TextField fx:id="stockField" promptText="stock amount. ie 200" visible="false" />
                   <Button id="stockSetBtn" fx:id="stockSetBtn" mnemonicParsing="false" onAction="#stockBtnAction" prefHeight="25.0" prefWidth="296.0" styleClass="buttons" text="Set New Stock" visible="false" />
                   <TextField fx:id="priceField" visible="false" />
                   <Button fx:id="priceButton" mnemonicParsing="false" onAction="#priceButtonAction" prefHeight="25.0" prefWidth="386.0" styleClass="buttons" text="Set New Price" visible="false" />
-                  <GridPane>
+                  <Text fx:id="newItemText" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="284.13671875">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Text>
+                  <GridPane prefHeight="128.0" prefWidth="285.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <TextField fx:id="nameTextField" promptText="name" visible="false" />
@@ -54,12 +59,25 @@
                         <TextField fx:id="newStockTextField" promptText="stock" visible="false" GridPane.rowIndex="1" />
                         <TextField fx:id="minStockTextField" promptText="min stock" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Button fx:id="submitItemBtn" mnemonicParsing="false" onAction="#newItemBtn" prefHeight="25.0" prefWidth="148.0" styleClass="buttons" text="Submit" visible="false" GridPane.rowIndex="2" />
-                        <TextField fx:id="ingredientsField" visible="false" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
             </VBox>
             <Button fx:id="exiButton" layoutX="42.0" layoutY="337.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="47.0" prefWidth="200.0" styleClass="buttons" text="Exit" />
+            <ScrollPane id="stockScroll" fx:id="menuIngredients" layoutX="299.0" layoutY="36.0" prefHeight="170.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="scrollPane" visible="false">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: transparent;">
+                     <children>
+                        <VBox id="tableItems" fx:id="menuIngredVbox" layoutY="4.0" prefHeight="154.0" prefWidth="200.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+            <Text fx:id="currStock" layoutX="15.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="200.0" />
+            <Text fx:id="selectIngredients" layoutX="299.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="200.0">
+               <font>
+                  <Font size="14.0" />
+               </font></Text>
          </children></AnchorPane>
   </items>
 </SplitPane>

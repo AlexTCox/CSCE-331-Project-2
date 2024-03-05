@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class PrimaryController implements Initializable {
     RadioButton excessBtn;
     @FXML
     RadioButton pairsBtn;
+
 
 
     private static Connection connection;
@@ -142,23 +144,28 @@ public class PrimaryController implements Initializable {
 
         salesBtn.onActionProperty().set(event -> {
             reportType = "sales";
-            endDate.setDisable(true);
+            endDate.setDisable(false);
+            startDate.setDisable(false);
         });
         usageBtn.onActionProperty().set(event -> {
             reportType = "usage";
             endDate.setDisable(false);
+            startDate.setDisable(false);
         });
         restockBtn.onActionProperty().set(event -> {
             reportType = "restock";
-            endDate.setDisable(false);
+            endDate.setDisable(true);
+            startDate.setDisable(true);
         });
         excessBtn.onActionProperty().set(event -> {
             reportType = "excess";
-            endDate.setDisable(false);
+            endDate.setDisable(true);
+            startDate.setDisable(false);
         });
         pairsBtn.onActionProperty().set(event -> {
             reportType = "pairs";
             endDate.setDisable(false);
+            startDate.setDisable(false);
         });
         
 
@@ -267,16 +274,16 @@ public class PrimaryController implements Initializable {
         Timestamp start = null;
         Timestamp end = null;
 
-        if (startDateValue == null || endDateValue == null) {
-            // Handle the case where startDate or endDate is null
-            // For example, show an error message or set default values
-        } else {
-            // Continue with the rest of the code
+        if (endDateValue == null) {
+            endDateValue = LocalDate.now();
+        }
+
+        if(!("restock".equals(reportType))){
             start = Timestamp.valueOf(startDateValue.atStartOfDay());
             LocalDateTime endDateTime = endDateValue.atTime(23, 59, 59);
             end = Timestamp.valueOf(endDateTime);
-            // Rest of the code...
         }
+           
         try{
             connection = DriverManager.getConnection("jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db", "csce331_550_01_user", "cSCUE8w9");
             if (reportType == null) {
@@ -334,7 +341,7 @@ public class PrimaryController implements Initializable {
                 resultSet = statement2.executeQuery();
                 salesTable.getItems().clear();
                 while (resultSet.next()) {
-                    String column1 = resultSet.getString("date");
+                    String column1 = resultSet.getString("name");
                     long column2 = resultSet.getLong("count");
                     RowData row = new RowData(column1, column2,null);
                     salesTable.getItems().add(row);
@@ -372,6 +379,17 @@ public class PrimaryController implements Initializable {
                         String column2 = resultSet.getString("item_2");
                         long column3 = resultSet.getLong("total_times_combined");
                         RowData row = new RowData(column1, column3, column2);
+                        salesTable.getItems().add(row);
+                    }
+                    break;
+                case "restock":
+                    CallableStatement statement5 = connection.prepareCall("{call restock()}");
+                    resultSet = statement5.executeQuery();
+                    salesTable.getItems().clear();
+                    while (resultSet.next()) {
+                        String column1 = resultSet.getString("item");
+                        int column2 = resultSet.getInt("quantity");
+                        RowData row = new RowData(column1, (long) column2, null);
                         salesTable.getItems().add(row);
                     }
                     break;

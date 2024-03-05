@@ -10,10 +10,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.sql.Array;
 import java.sql.CallableStatement;
 
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,11 +29,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -68,27 +75,61 @@ public class StockController implements Initializable{
     private ScrollPane menuPane;
     @FXML
     private ScrollPane drinkPane;
+    @FXML
+    private ScrollPane menuIngredients;
+    @FXML
+    private VBox menuIngredVbox;
+    @FXML
+    private Text currStock;
+    @FXML
+    Text selectIngredients;
+    @FXML
+    Text newItemText;
+
+    ObservableList<Node> checkboxes;
+    ArrayList<String> selectedItems = new ArrayList<>();
 
 
     //need to move this somewhere more secure
     String dbUrl = "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db";
     String user = "csce331_550_01_user";
     String password = "cSCUE8w9";
+    ToggleGroup group = new ToggleGroup();
+    public class itemData {
+        private int stock;
+        private String name;
+    
+        public itemData(int stock, String name) {
+            this.stock = stock;
+            this.name = name;
+        }
 
-    //controls what fields are visable when igredients category is open
+        public int getStock() {
+            return stock;
+        }
+        public String getName() {
+            return name;
+        }
+    
+    }
+
+
+
     @FXML
     void btnActionIngredients(ActionEvent event){
 
         category = "ingredients";
+        newItemText.setText("Create New Ingredient");
+        nameTextField.setPromptText("Name");
+        selectIngredients.setText("");
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
         priceField.setVisible(false);
         priceButton.setVisible(false);
-        ingredientsField.setVisible(false);
+        menuIngredients.setVisible(false);
         setFieldsVisibility(true, true, true, true, true);
         String query = "SELECT * FROM ingredients;";
         populateVBoxWithQueryResults(query, true);
-        ingredientPane.setContent(tableItems);
 
     }
     @FXML
@@ -107,52 +148,45 @@ public class StockController implements Initializable{
     @FXML
     void btnActionInMenu(ActionEvent event){
 
+        selectedItems.clear();
+        currStock.setText("");
+        newItemText.setText("Create New Menu Item");
+        nameTextField.setPromptText("Name");
         category = "menu_item";
+
+        selectIngredients.setText("Select Ingredients");
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
         priceField.setVisible(false);
         priceButton.setVisible(false);
-        ingredientsField.setVisible(true);
+        menuIngredients.setVisible(true);
+
+
         String query = "SELECT * FROM menu_Item;";
+        String ingQuery ="SELECT * FROM ingredients;";
         setFieldsVisibility(true, true, false, false, true);
         populateVBoxWithQueryResults(query, false);
-
-    }
-
-    //controls what fields are visable when drink category is open and populates the drink box
-    // dumbest way possible to do this but didnt want to have to add another variable to function
-    @FXML
-    void btnActionInDrink(ActionEvent event){
-        category = "drinks";
-        stockField.setVisible(false);
-        stockSetBtn.setVisible(false);
-        priceField.setVisible(false);
-        priceButton.setVisible(false);
-        ingredientsField.setVisible(false);
-        setFieldsVisibility(true, true, false, false, true);
-        tableItems.getChildren().clear();
-        ToggleGroup group = new ToggleGroup();
-
+        ingredientPane.setContent(tableItems);
         try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM drinks")) {
-
+            ResultSet resultSet = statement.executeQuery(ingQuery)) {
+            List<CheckBox> checkBoxes = new ArrayList<>();
             while (resultSet.next()) {
-                String name = resultSet.getString("size");
-                RadioButton radioButton = new RadioButton(name);
-                radioButton.setToggleGroup(group);
-                radioButton.setOnAction(e -> {
-                    priceButton.setVisible(true);
-                    priceField.setVisible(true);
-                    stockField.setVisible(false);
-                    stockSetBtn.setVisible(false);
-                    ingredientsField.setVisible(false);
-                    setFieldsVisibility(false, false, false, false, false);
-                });
-                tableItems.getChildren().add(radioButton);
+                String name = resultSet.getString("name");
+                CheckBox checkBox = new CheckBox(name);
+                checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        selectedItems.add(checkBox.getText());
+                    } else {
+                        selectedItems.remove(checkBox.getText());
+                    }});
+                
+                checkBoxes.add(checkBox);
             }
-            // ingredientPane.setFitToHeight(true);
-            // ingredientPane.setFitToWidth(true);
+            checkBoxes.sort(Comparator.comparing(CheckBox::getText));
+            menuIngredVbox.getChildren().addAll(checkBoxes);
+            menuIngredients.setContent(menuIngredVbox);
+
         } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
@@ -162,43 +196,105 @@ public class StockController implements Initializable{
             alert.showAndWait();
             return;
         }
+    }
+
+    //controls what fields are visable when drink category is open and populates the drink box
+    // dumbest way possible to do this but didnt want to have to add another variable to function
+    @FXML
+    void btnActionInDrink(ActionEvent event){
+        category = "drinks";
+        newItemText.setText("Create New Drink Size");
+        nameTextField.setPromptText("Size");
+
+
+        stockField.setVisible(false);
+        stockSetBtn.setVisible(false);
+        priceField.setVisible(false);
+        priceButton.setVisible(false);
+        menuIngredients.setVisible(false);
+        currStock.setText("");
+        selectIngredients.setText("");
+
+        setFieldsVisibility(true, true, false, false, true);
+        tableItems.getChildren().clear();
+        String query = "SELECT * FROM drinks;";
+        populateVBoxWithQueryResults(query, false);
+
         }
 
     //ended up having to add another variable anyways
     //this functioon just populates the vbox for ingredients and menu. but can be more generalized if more tables added
     private void populateVBoxWithQueryResults(String query, Boolean ingredient) {
         // Clear the existing content in the VBox
-        ToggleGroup group = new ToggleGroup();
         tableItems.getChildren().clear();
 
         try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-
+            List<RadioButton> radioButtons = new ArrayList<>();
+            radioButtons.clear();
             // Iterate over the result set and populate the VBox with data
             while (resultSet.next()) {
-                String name = resultSet.getString("name");
-                RadioButton radioButton = new RadioButton(name);
+                String name = "";
+                Double price = 0.0;
+                int stock =0;
+
+                if(!"ingredients".equals(category)){
+                    price = resultSet.getDouble("price"); 
+                }else{
+                    price = resultSet.getDouble("add_on_price");
+                    stock = resultSet.getInt("stock");
+                }
+
+
+                if("drinks".equals(category)){
+                    name = resultSet.getString("size");
+                }else{
+                    name = resultSet.getString("name");
+                }
+
+                RadioButton radioButton = new RadioButton("$"+price+ " " +name);
                 radioButton.setToggleGroup(group);
+                radioButton.getStyleClass().add("radioBtn");
+                itemData data = new itemData(stock, name);
+                radioButton.setUserData(data);
                 radioButton.setOnAction(event -> {
-                    if(ingredient){
+                    if("ingredients".equals(category)){
                         priceButton.setVisible(true);
                         priceField.setVisible(true);
                         stockField.setVisible(true);
                         stockSetBtn.setVisible(true);
-                        ingredientsField.setVisible(false);
-                    }else{
+                        menuIngredients.setVisible(false);
+                        itemData itemData = (itemData) radioButton.getUserData();
+                        currStock.setText("Current Stock: " + itemData.getStock());
+            
+                    }else if("menu_item".equals(category)){
                         priceButton.setVisible(true);
                         priceField.setVisible(true);
                         stockField.setVisible(false);
                         stockSetBtn.setVisible(false);
-                        ingredientsField.setVisible(false);
+                        menuIngredients.setVisible(false);
+            
                     }
+                    else{
+                        priceButton.setVisible(true);
+                        priceField.setVisible(true);
+                        stockField.setVisible(false);
+                        stockSetBtn.setVisible(false);
+                        menuIngredients.setVisible(false);
+                    }
+                    newItemText.setText("");
+                    selectIngredients.setText("");
                     setFieldsVisibility(false, false, false, false, false);
 
                 });
-                tableItems.getChildren().add(radioButton);
+                radioButtons.add(radioButton);
             }
+            // Sort the radio buttons before adding them to the VBox
+
+            radioButtons.sort(Comparator.comparing(radioButton -> ((itemData) radioButton.getUserData()).getName().toLowerCase()));
+            tableItems.getChildren().addAll(radioButtons);
+            ingredientPane.setContent(tableItems);
         } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
@@ -225,6 +321,8 @@ public class StockController implements Initializable{
         newStockTextField.clear();
         minStockTextField.clear();
         stockField.clear();
+        priceField.clear();
+
     }
 
     //this acts just to get the text field that the radio button has
@@ -247,7 +345,8 @@ public class StockController implements Initializable{
         RadioButton selectedRadioButton = getSelectedRadioButton();
         
         if (selectedRadioButton != null) {
-            String itemName = selectedRadioButton.getText();
+            itemData itemData = (itemData) selectedRadioButton.getUserData();
+            String itemName = itemData.getName();
             String priceText = priceField.getText();
             String priceName = "price";
             if (!priceText.isEmpty()) {
@@ -281,6 +380,7 @@ public class StockController implements Initializable{
                             alert.showAndWait();
                             return;
                         }
+                        refreshVBox();
                         clearFields();
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -326,7 +426,8 @@ public class StockController implements Initializable{
         if(selectedRadioButton != null){
             if(!stockText.isEmpty()){
                 try{
-                    String itemName = selectedRadioButton.getText();
+                    itemData itemData = (itemData) selectedRadioButton.getUserData();
+                    String itemName = itemData.getName();
                     int newStock = Integer.parseInt(stockField.getText());
                     if(newStock <= 0){
                         Alert alert = new Alert(AlertType.ERROR);
@@ -346,6 +447,7 @@ public class StockController implements Initializable{
                         } else {
                             System.out.println("Failed to update stock.");
                         }
+                        refreshVBox();
                         clearFields();
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -393,7 +495,6 @@ public class StockController implements Initializable{
         String nameText = nameTextField.getText();
         String priceText = priceTextField.getText();
         String minStockText = minStockTextField.getText();
-        String ingredientsText = ingredientsField.getText();
         int rowsAffected = 0;
         Boolean fxnCalled = false;
     
@@ -403,6 +504,7 @@ public class StockController implements Initializable{
         PreparedStatement statement =null;
         switch (category) {
             case "ingredients":
+                
                 int newStock = Integer.parseInt(stockText);
                 double newPrice = Double.parseDouble(priceText);
                 int newMinStock = Integer.parseInt(minStockText);
@@ -419,9 +521,11 @@ public class StockController implements Initializable{
                 statement.setInt(2, newStock);
                 statement.setDouble(3, newPrice);
                 statement.setInt(4, newMinStock);
+                populateVBoxWithQueryResults("SELECT * FROM ingredients;", true);
                 break;
             case "menu_item": 
-                String[] ingredientsArray = ingredientsText.split(",");
+                
+                String[] ingredientsArray = selectedItems.toArray(new String[selectedItems.size()]);
                 Array ingredients = connection.createArrayOf("TEXT", ingredientsArray);
                 double menuItemPrice = Double.parseDouble(priceText);
                 if(menuItemPrice <= 0 || ingredientsArray.length <= 0){
@@ -440,6 +544,7 @@ public class StockController implements Initializable{
                 fxnCalled =true;
                 break;
             case "drinks":
+                
                 String size = nameText;
                 double drinkPrice = Double.parseDouble(priceText);
                 if(drinkPrice <= 0){
@@ -467,16 +572,17 @@ public class StockController implements Initializable{
         if(fxnCalled){
             rowsAffected = menuFxn.executeUpdate();
         }
-        if (rowsAffected > 0 ) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("ITEM ERROR");
-            alert.setHeaderText("FAILED TO ADD ITEM");
-            alert.setContentText("Ensure you entered all fields and that you are connected to the internet");
-            alert.showAndWait();
-            return;
+        if (rowsAffected > 0 || fxnCalled) {
+            // Alert alert = new Alert(AlertType.ERROR);
+            // alert.setTitle("ITEM ERROR");
+            // alert.setHeaderText("FAILED TO ADD ITEM");
+            // alert.setContentText("Ensure you entered all fields and that you are connected to the internet");
+            // alert.showAndWait();
+            // return;
         } else {
             System.out.println("Failed to add item.");
         }
+        refreshVBox();
         clearFields();
     } catch (SQLException e) {
         e.printStackTrace();
@@ -496,6 +602,34 @@ public class StockController implements Initializable{
         return;
     }
 }
+
+private void refreshVBox() {
+    switch (category) {
+        case "ingredients":
+            populateVBoxWithQueryResults("SELECT * FROM ingredients;", true);
+            break;
+        case "menu_item":
+            populateVBoxWithQueryResults("SELECT * FROM menu_Item;", false);
+            break;
+        case "drinks":
+            populateVBoxWithQueryResults("SELECT * FROM drinks;", false);
+            break;
+        default:
+            System.out.println("Invalid category");
+        
+    }
+
+    priceButton.setVisible(false);
+    priceField.setVisible(false);
+    stockField.setVisible(false);
+    stockSetBtn.setVisible(false);
+    menuIngredients.setVisible(false);
+    setFieldsVisibility(false, false, false, false, false);
+    clearFields();
+
+}
+
+
 //general initialize. most likley wont use here
 @Override
 public void initialize(URL url, ResourceBundle resourceBundle) {
