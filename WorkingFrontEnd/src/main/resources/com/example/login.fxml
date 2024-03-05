@@ -44,11 +44,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="button" layoutX="123.0" layoutY="276.0" mnemonicParsing="false" onAction="#userLogIn" text="Log In">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Button>
+            <Button layoutX="123.0" layoutY="276.0" maxHeight="35.0" maxWidth="120.0" minHeight="35.0" minWidth="120.0" mnemonicParsing="false" onAction="#userLogIn" prefHeight="35.0" prefWidth="120.0" styleClass="buttons" text="Log In" />
          </children>
       </AnchorPane>
    </right>

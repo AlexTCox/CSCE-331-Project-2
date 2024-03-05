@@ -13,8 +13,6 @@ public class LogIn {
 
     }
     @FXML
-    private Button button;
-    @FXML
     private Label wronglogin;
     @FXML
     private TextField name;

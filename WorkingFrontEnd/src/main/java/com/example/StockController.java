@@ -54,6 +54,8 @@ public class StockController implements Initializable{
     @FXML
     private Button stockSetBtn;
     @FXML
+    private Button waiterBtn;
+    @FXML
     private TextField priceField;
     @FXML
     private Button priceButton;
@@ -95,6 +97,8 @@ public class StockController implements Initializable{
     String user = "csce331_550_01_user";
     String password = "cSCUE8w9";
     ToggleGroup group = new ToggleGroup();
+
+    //class to hold the data for the radio buttons because the name is price + name
     public class itemData {
         private int stock;
         private String name;
@@ -113,25 +117,7 @@ public class StockController implements Initializable{
     
     }
 
-
-
-    @FXML
-    void btnActionIngredients(ActionEvent event){
-
-        category = "ingredients";
-        newItemText.setText("Create New Ingredient");
-        nameTextField.setPromptText("Name");
-        selectIngredients.setText("");
-        stockField.setVisible(false);
-        stockSetBtn.setVisible(false);
-        priceField.setVisible(false);
-        priceButton.setVisible(false);
-        menuIngredients.setVisible(false);
-        setFieldsVisibility(true, true, true, true, true);
-        String query = "SELECT * FROM ingredients;";
-        populateVBoxWithQueryResults(query, true);
-
-    }
+    //changes the scene to the primary scene
     @FXML
     public void changeScene(ActionEvent event) throws IOException {
 
@@ -139,41 +125,75 @@ public class StockController implements Initializable{
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
-        stage.setTitle("Manager View");
+        stage.setTitle("Manager");
         scene.getStylesheets().add("application.css");
         stage.show();
+    }
+
+    //controls what fields are visable when ingredient category is open and populates the ingredient box
+    @FXML
+    void btnActionIngredients(ActionEvent event){
+
+        //set the category to ingredients and set text of text fields
+        category = "ingredients";
+        newItemText.setText("Create New Ingredient");
+        nameTextField.setPromptText("Name");
+        selectIngredients.setText("");
+
+        //set all the fields to be visible or not
+        stockField.setVisible(false);
+        stockSetBtn.setVisible(false);
+        priceField.setVisible(false);
+        priceButton.setVisible(false);
+        menuIngredients.setVisible(false);
+        setFieldsVisibility(true, true, true, true, true);
+
+        //populate the vbox with the ingredients
+        String query = "SELECT * FROM ingredients;";
+        populateVBoxWithQueryResults(query);
+
     }
 
     //controls what fields are visable when menu category is open
     @FXML
     void btnActionInMenu(ActionEvent event){
 
+        //clear the selected items and set the text of the text fields
         selectedItems.clear();
         currStock.setText("");
         newItemText.setText("Create New Menu Item");
         nameTextField.setPromptText("Name");
         category = "menu_item";
-
         selectIngredients.setText("Select Ingredients");
+
+        //set the fields to be visible or not
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
         priceField.setVisible(false);
         priceButton.setVisible(false);
         menuIngredients.setVisible(true);
+        setFieldsVisibility(true, true, false, false, true);
 
-
+        //quieries
         String query = "SELECT * FROM menu_Item;";
         String ingQuery ="SELECT * FROM ingredients;";
-        setFieldsVisibility(true, true, false, false, true);
-        populateVBoxWithQueryResults(query, false);
-        ingredientPane.setContent(tableItems);
+
+        populateVBoxWithQueryResults(query);
+        
+        //this populates the table that manager selects from for the ingredients for the menu item
         try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(ingQuery)) {
+
             List<CheckBox> checkBoxes = new ArrayList<>();
+
+            // Iterate over the result set and populate the VBox with data
             while (resultSet.next()) {
+
                 String name = resultSet.getString("name");
                 CheckBox checkBox = new CheckBox(name);
+
+                // Add a listener to the check box to add or remove the selected item from the list
                 checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue) {
                         selectedItems.add(checkBox.getText());
@@ -183,10 +203,13 @@ public class StockController implements Initializable{
                 
                 checkBoxes.add(checkBox);
             }
+
+            // Sort the check boxes before adding them to the VBox
             checkBoxes.sort(Comparator.comparing(CheckBox::getText));
             menuIngredVbox.getChildren().addAll(checkBoxes);
             menuIngredients.setContent(menuIngredVbox);
 
+        //catch sql errors and display an alert
         } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
@@ -199,46 +222,51 @@ public class StockController implements Initializable{
     }
 
     //controls what fields are visable when drink category is open and populates the drink box
-    // dumbest way possible to do this but didnt want to have to add another variable to function
     @FXML
     void btnActionInDrink(ActionEvent event){
+
         category = "drinks";
         newItemText.setText("Create New Drink Size");
         nameTextField.setPromptText("Size");
+        currStock.setText("");
+        selectIngredients.setText("");
 
-
+        //set the fields to be visible or not
         stockField.setVisible(false);
         stockSetBtn.setVisible(false);
         priceField.setVisible(false);
         priceButton.setVisible(false);
         menuIngredients.setVisible(false);
-        currStock.setText("");
-        selectIngredients.setText("");
 
         setFieldsVisibility(true, true, false, false, true);
+
         tableItems.getChildren().clear();
         String query = "SELECT * FROM drinks;";
-        populateVBoxWithQueryResults(query, false);
+        populateVBoxWithQueryResults(query);
 
         }
 
-    //ended up having to add another variable anyways
     //this functioon just populates the vbox for ingredients and menu. but can be more generalized if more tables added
-    private void populateVBoxWithQueryResults(String query, Boolean ingredient) {
+    private void populateVBoxWithQueryResults(String query) {
         // Clear the existing content in the VBox
         tableItems.getChildren().clear();
 
         try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
+            
+            // Create a list to hold the radio buttons
             List<RadioButton> radioButtons = new ArrayList<>();
             radioButtons.clear();
+
             // Iterate over the result set and populate the VBox with data
             while (resultSet.next()) {
+
                 String name = "";
                 Double price = 0.0;
                 int stock =0;
 
+                // Get the price of the item
                 if(!"ingredients".equals(category)){
                     price = resultSet.getDouble("price"); 
                 }else{
@@ -246,18 +274,21 @@ public class StockController implements Initializable{
                     stock = resultSet.getInt("stock");
                 }
 
-
+                // Get the name of the item
                 if("drinks".equals(category)){
                     name = resultSet.getString("size");
                 }else{
                     name = resultSet.getString("name");
                 }
 
+                // Create a radio button for the item
                 RadioButton radioButton = new RadioButton("$"+price+ " " +name);
                 radioButton.setToggleGroup(group);
                 radioButton.getStyleClass().add("radioBtn");
                 itemData data = new itemData(stock, name);
                 radioButton.setUserData(data);
+
+                // Add a listener to the radio button to display the stock of the selected item
                 radioButton.setOnAction(event -> {
                     if("ingredients".equals(category)){
                         priceButton.setVisible(true);
@@ -283,6 +314,8 @@ public class StockController implements Initializable{
                         stockSetBtn.setVisible(false);
                         menuIngredients.setVisible(false);
                     }
+
+                    //clear text fields
                     newItemText.setText("");
                     selectIngredients.setText("");
                     setFieldsVisibility(false, false, false, false, false);
@@ -290,11 +323,13 @@ public class StockController implements Initializable{
                 });
                 radioButtons.add(radioButton);
             }
-            // Sort the radio buttons before adding them to the VBox
 
+            // Sort the radio buttons before adding them to the VBox
             radioButtons.sort(Comparator.comparing(radioButton -> ((itemData) radioButton.getUserData()).getName().toLowerCase()));
             tableItems.getChildren().addAll(radioButtons);
             ingredientPane.setContent(tableItems);
+
+        //cat sql errors and show alert
         } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
@@ -305,7 +340,7 @@ public class StockController implements Initializable{
             return;
         }
     }
-    //oop needed to condense the amount of times i did this
+    //needed to condense the amount of times i did this
     private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, boolean newStockVisible,
                                      boolean minStockVisible, boolean submitVisible) {
         nameTextField.setVisible(nameVisible);
@@ -315,6 +350,7 @@ public class StockController implements Initializable{
         submitItemBtn.setVisible(submitVisible);
     }
 
+    //self explanatory
     private void clearFields() {
         nameTextField.clear();
         priceTextField.clear();
@@ -325,7 +361,7 @@ public class StockController implements Initializable{
 
     }
 
-    //this acts just to get the text field that the radio button has
+    //this acts just to get the radio button that is selected
     private RadioButton getSelectedRadioButton() {
         for (int i = 0; i < tableItems.getChildren().size(); i++) {
             if (tableItems.getChildren().get(i) instanceof RadioButton) {
@@ -341,16 +377,22 @@ public class StockController implements Initializable{
     //BIG function. this is how all the prices are updated when the set price button is pressed
     @FXML
     void priceButtonAction(ActionEvent event) {
+
         // Get the selected menu item from the radio buttons
         RadioButton selectedRadioButton = getSelectedRadioButton();
         
+        // Check if a button is selected
         if (selectedRadioButton != null) {
+
             itemData itemData = (itemData) selectedRadioButton.getUserData();
             String itemName = itemData.getName();
             String priceText = priceField.getText();
             String priceName = "price";
+
+            // Check if the price field is empty
             if (!priceText.isEmpty()) {
                 try {
+
                     double newPrice = Double.parseDouble(priceText);
                     if(newPrice <= 0){
                         Alert alert = new Alert(AlertType.ERROR);
@@ -360,16 +402,20 @@ public class StockController implements Initializable{
                         alert.showAndWait();
                         return;
                     }
+
                     String tableName = category;
                     if("ingredients".equals(tableName)){
                         priceName="add_on_price";
                     }
+
                     // Update the price of the selected item in the database
                     try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
                          PreparedStatement statement = connection.prepareStatement("UPDATE " + tableName +" SET "+ priceName +" = ? WHERE name = ?")) {
                         statement.setDouble(1, newPrice);
                         statement.setString(2, itemName);
                         int rowsAffected = statement.executeUpdate();
+
+                        // Check if the price was updated successfully
                         if (rowsAffected > 0) {
                             System.out.println("Price updated successfully.");
                         } else {
@@ -380,8 +426,12 @@ public class StockController implements Initializable{
                             alert.showAndWait();
                             return;
                         }
+
+                        // Refresh the VBox and clear the fields
                         refreshVBox();
                         clearFields();
+
+                    // Catch SQL errors and display an alert
                     } catch (SQLException e) {
                         e.printStackTrace();
                         Alert alert = new Alert(AlertType.ERROR);
@@ -391,6 +441,8 @@ public class StockController implements Initializable{
                         alert.showAndWait();
                         return;
                     }
+
+                // Catch number format errors and display an alert
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Alert alert = new Alert(AlertType.ERROR);
@@ -400,6 +452,8 @@ public class StockController implements Initializable{
                     alert.showAndWait();
                     return;
                 }
+            
+            // Display an alert if the price field is empty
             } else {
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("PRICE ERROR");
@@ -408,6 +462,8 @@ public class StockController implements Initializable{
                     alert.showAndWait();
                     return;
             }
+
+        // Display an alert if no item is selected
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ITEM ERROR");
@@ -423,12 +479,20 @@ public class StockController implements Initializable{
     void stockBtnAction(ActionEvent event){
         RadioButton selectedRadioButton =getSelectedRadioButton();
         String stockText = stockField.getText();
+
+        // Check if a button is selected
         if(selectedRadioButton != null){
+
+            // Check if the stock field is empty
             if(!stockText.isEmpty()){
+
                 try{
+
                     itemData itemData = (itemData) selectedRadioButton.getUserData();
                     String itemName = itemData.getName();
                     int newStock = Integer.parseInt(stockField.getText());
+
+                    // Check if the stock is more than 0
                     if(newStock <= 0){
                         Alert alert = new Alert(AlertType.ERROR);
                         alert.setTitle("STOCK ERROR");
@@ -437,18 +501,25 @@ public class StockController implements Initializable{
                         alert.showAndWait();
                         return;
                     }
+
                     try (Connection connection = DriverManager.getConnection(dbUrl, user, password);
                         PreparedStatement statement = connection.prepareStatement("UPDATE ingredients SET stock = ? WHERE name = ?")) {
                         statement.setDouble(1, newStock);
                         statement.setString(2, itemName);
                         int rowsAffected = statement.executeUpdate();
+
+                        // Check if the stock was updated successfully
                         if (rowsAffected > 0) {
                             System.out.println("Stock updated successfully.");
                         } else {
                             System.out.println("Failed to update stock.");
                         }
+
+                        // Refresh the VBox and clear the fields
                         refreshVBox();
                         clearFields();
+
+                    // catch sql errors and show alert
                     } catch (SQLException e) {
                         e.printStackTrace();
                         Alert alert = new Alert(AlertType.ERROR);
@@ -458,6 +529,8 @@ public class StockController implements Initializable{
                         alert.showAndWait();
                         return;
                     }
+
+                // Catch number format errors and display an alert
                 }catch (NumberFormatException e) {
                     e.printStackTrace();
                     Alert alert = new Alert(AlertType.ERROR);
@@ -467,6 +540,8 @@ public class StockController implements Initializable{
                     alert.showAndWait();
                     return;
                 }
+
+            // Display an alert if the stock field is empty
             }else{
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("STOCK ERROR");
@@ -475,6 +550,8 @@ public class StockController implements Initializable{
                 alert.showAndWait();
                 return;
             }
+
+        // Display an alert if no item is selected
         }else{
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ITEM ERROR");
@@ -484,30 +561,35 @@ public class StockController implements Initializable{
             return;
         }
     }
-    // @FXML
-    // void onExitBtn(ActionEvent event){
-    //     Stage stage = (Stage) exiButton.getScene().getWindow();
-    //     stage.close();
-    // }
+
+    //this is the function that adds the new item to the database
     @FXML
     void newItemBtn(ActionEvent event){
+
+        // Get the text from the text fields
         String stockText = newStockTextField.getText();
         String nameText = nameTextField.getText();
         String priceText = priceTextField.getText();
         String minStockText = minStockTextField.getText();
         int rowsAffected = 0;
+
+        //bool to check if a function was called and not just a query
         Boolean fxnCalled = false;
     
 
     try(Connection connection = DriverManager.getConnection(dbUrl, user, password)) {
         CallableStatement menuFxn = null;
         PreparedStatement statement =null;
+
         switch (category) {
+
             case "ingredients":
                 
                 int newStock = Integer.parseInt(stockText);
                 double newPrice = Double.parseDouble(priceText);
                 int newMinStock = Integer.parseInt(minStockText);
+
+                // Check if the stock, price, and min stock are more than 0
                 if(newStock <= 0 || newPrice <= 0 || newMinStock <= 0){
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("FORMAT ERROR");
@@ -516,18 +598,22 @@ public class StockController implements Initializable{
                     alert.showAndWait();
                     return;
                 }
+
                 statement = connection.prepareStatement("INSERT INTO ingredients (name, stock, add_on_price, min_stock) VALUES (?, ?, ?, ?)");
                 statement.setString(1, nameText);
                 statement.setInt(2, newStock);
                 statement.setDouble(3, newPrice);
                 statement.setInt(4, newMinStock);
-                populateVBoxWithQueryResults("SELECT * FROM ingredients;", true);
+
+                // populateVBoxWithQueryResults("SELECT * FROM ingredients;");
                 break;
             case "menu_item": 
                 
                 String[] ingredientsArray = selectedItems.toArray(new String[selectedItems.size()]);
                 Array ingredients = connection.createArrayOf("TEXT", ingredientsArray);
                 double menuItemPrice = Double.parseDouble(priceText);
+
+                // Check if the price and ingredients are more than 0
                 if(menuItemPrice <= 0 || ingredientsArray.length <= 0){
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("FORMAT ERROR");
@@ -536,6 +622,7 @@ public class StockController implements Initializable{
                     alert.showAndWait();
                     return;
                 }
+
                 menuFxn = connection.prepareCall("{? = CALL new_menu_option(?, ?, ?)}");
                 menuFxn.registerOutParameter(1, Types.BOOLEAN);
                 menuFxn.setString(2, nameText);
@@ -543,10 +630,13 @@ public class StockController implements Initializable{
                 menuFxn.setArray(4, ingredients);
                 fxnCalled =true;
                 break;
+
             case "drinks":
                 
                 String size = nameText;
                 double drinkPrice = Double.parseDouble(priceText);
+
+                // Check if the price is more than 0
                 if(drinkPrice <= 0){
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("FORMAT ERROR");
@@ -555,10 +645,12 @@ public class StockController implements Initializable{
                     alert.showAndWait();
                     return;
                 }
+
                 statement = connection.prepareStatement("INSERT INTO drinks (size, price) VALUES (?, ?)");
                 statement.setString(1, size);
                 statement.setDouble(2, drinkPrice);
                 break;
+
             default:
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("CATEGORY ERROR");
@@ -566,6 +658,8 @@ public class StockController implements Initializable{
                 alert.setContentText("THIS SHOULD BE IMPOSSIBLE");
                 alert.showAndWait();
         }
+
+        // Execute the statement and get the number of rows affected or if fxn was called act accordingly
         if(statement != null){
             rowsAffected = statement.executeUpdate();
         }
@@ -573,18 +667,22 @@ public class StockController implements Initializable{
             rowsAffected = menuFxn.executeUpdate();
         }
         if (rowsAffected > 0 || fxnCalled) {
-            // Alert alert = new Alert(AlertType.ERROR);
-            // alert.setTitle("ITEM ERROR");
-            // alert.setHeaderText("FAILED TO ADD ITEM");
-            // alert.setContentText("Ensure you entered all fields and that you are connected to the internet");
-            // alert.showAndWait();
-            // return;
+
         } else {
-            System.out.println("Failed to add item.");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("ITEM ERROR");
+            alert.setHeaderText("FAILED TO ADD ITEM");
+            alert.setContentText("Ensure you entered all fields and that you are connected to the internet");
+            alert.showAndWait();
+            return;
         }
+
         refreshVBox();
         clearFields();
+
+    //catch sql errors and show alert
     } catch (SQLException e) {
+
         e.printStackTrace();
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("SQL ERROR");
@@ -592,7 +690,11 @@ public class StockController implements Initializable{
         alert.setContentText("Enusure you are connected to internet and try again. If problem persists, contact support." + e);
         alert.showAndWait();
         return;
-    } catch (NumberFormatException e) {
+
+    } 
+
+    //catch number format errors and show alert
+    catch (NumberFormatException e) {
         e.printStackTrace();
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("FIELD ERROR");
@@ -603,16 +705,17 @@ public class StockController implements Initializable{
     }
 }
 
+//refreshes the vbox to update information
 private void refreshVBox() {
     switch (category) {
         case "ingredients":
-            populateVBoxWithQueryResults("SELECT * FROM ingredients;", true);
+            populateVBoxWithQueryResults("SELECT * FROM ingredients;");
             break;
         case "menu_item":
-            populateVBoxWithQueryResults("SELECT * FROM menu_Item;", false);
+            populateVBoxWithQueryResults("SELECT * FROM menu_Item;");
             break;
         case "drinks":
-            populateVBoxWithQueryResults("SELECT * FROM drinks;", false);
+            populateVBoxWithQueryResults("SELECT * FROM drinks;");
             break;
         default:
             System.out.println("Invalid category");
@@ -626,8 +729,9 @@ private void refreshVBox() {
     menuIngredients.setVisible(false);
     setFieldsVisibility(false, false, false, false, false);
     clearFields();
-
+    currStock.setText("");
 }
+
 
 
 //general initialize. most likley wont use here

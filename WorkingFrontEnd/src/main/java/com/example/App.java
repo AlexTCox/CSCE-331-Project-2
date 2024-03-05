@@ -38,7 +38,7 @@ public class App extends Application {
             String resourcePath = App.class.getResource(fxml).toString();
             if (resourcePath.endsWith("primary.fxml")) {
                 stg.setTitle("Manager");
-            } else if (resourcePath.endsWith("Waiter.fxml")) {
+            } else if (resourcePath.endsWith("WaiterView.fxml")) {
                 stg.setTitle("Waiter");
             }
         }

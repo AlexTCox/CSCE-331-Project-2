@@ -74,7 +74,7 @@
               </panes>
             </Accordion>
             <Button fx:id="stockBtn" layoutX="20.0" layoutY="312.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="33.0" prefWidth="200.0" styleClass="buttons" text="Update and Add Item" />
-            <Button id="logoutBtn" fx:id="logOut" layoutX="20.0" layoutY="351.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="33.0" prefWidth="200.0" text="Logout" textFill="RED" />
+            <Button id="logoutBtn" fx:id="logOut" layoutX="20.0" layoutY="351.0" mnemonicParsing="false" onAction="#logoutBtnAction" prefHeight="33.0" prefWidth="94.0" text="Logout" textFill="RED" />
             <RadioButton fx:id="salesBtn" layoutX="21.0" layoutY="250.0" mnemonicParsing="false" text="Sales" />
             <RadioButton fx:id="usageBtn" layoutX="82.0" layoutY="250.0" mnemonicParsing="false" text="Usage" />
             <RadioButton fx:id="restockBtn" layoutX="144.0" layoutY="250.0" mnemonicParsing="false" text="Restock" />
@@ -85,6 +85,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
+            <Button id="logoutBtn" fx:id="waiterBtn" layoutX="126.0" layoutY="351.0" mnemonicParsing="false" onAction="#changeSceneWaiter" prefHeight="33.0" prefWidth="94.0" text="Waiter View" textFill="RED" />
          </children></AnchorPane>
     <AnchorPane prefHeight="160.0" prefWidth="100.0">
          <children>
@@ -102,8 +103,8 @@
                   <TableColumn fx:id="item2Name" prefWidth="75.0" />
                </columns>
             </TableView>
-            <DatePicker fx:id="startDate" layoutX="13.0" layoutY="361.0" prefHeight="25.0" prefWidth="127.0" />
-            <DatePicker fx:id="endDate" layoutX="148.0" layoutY="361.0" prefHeight="25.0" prefWidth="127.0" />
+            <DatePicker fx:id="startDate" layoutX="13.0" layoutY="361.0" prefHeight="25.0" prefWidth="127.0" promptText="Start Date" />
+            <DatePicker fx:id="endDate" layoutX="148.0" layoutY="361.0" prefHeight="25.0" prefWidth="127.0" promptText="End Date" />
             <Button layoutX="290.0" layoutY="361.0" mnemonicParsing="false" onAction="#salesTableBtnAction" text="Submit" />
             <Text layoutX="14.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Information">
                <font>

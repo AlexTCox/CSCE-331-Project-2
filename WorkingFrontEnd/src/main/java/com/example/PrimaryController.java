@@ -104,6 +104,7 @@ public class PrimaryController implements Initializable {
 
     }
 
+    //Simple change scene function
     public void changeScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));
         Scene scene = new Scene(root);
@@ -124,6 +125,8 @@ public class PrimaryController implements Initializable {
             //hold the name and quanity of items
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         salesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        //set the columns to the correct valuesas
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -136,12 +139,15 @@ public class PrimaryController implements Initializable {
         String queryMenu = "SELECT * FROM menu_Item;";
         String queryDrinks = "SELECT * FROM drinks;";
         ToggleGroup group = new ToggleGroup();
+
+        //set the radio buttons to the correct group
         salesBtn.setToggleGroup(group);
         usageBtn.setToggleGroup(group);
         restockBtn.setToggleGroup(group);
         excessBtn.setToggleGroup(group);
         pairsBtn.setToggleGroup(group);
 
+        //set actions for radio buttons
         salesBtn.onActionProperty().set(event -> {
             reportType = "sales";
             endDate.setDisable(false);
@@ -168,8 +174,7 @@ public class PrimaryController implements Initializable {
             startDate.setDisable(false);
         });
         
-
-
+        //disable dates that are not in the range
         startDate.setDayCellFactory(picker -> new DateCell() {
         @Override
         public void updateItem(LocalDate date, boolean empty) {
@@ -180,6 +185,7 @@ public class PrimaryController implements Initializable {
         }
         });
 
+        //disable dates that are not in the range
         endDate.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -197,9 +203,12 @@ public class PrimaryController implements Initializable {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(queryIngredients);
             while (resultSet.next()) {
+
                 String ingredient = resultSet.getString("name");
                 CheckBox checkBox = new CheckBox(ingredient);
                 checkBox.getStyleClass().add("checkBox");
+
+                //add the item to the table view check if unchecked
                 checkBox.setOnAction(event -> {
                     if(checkBox.isSelected()){
                         populateTableView("ingredients", ingredient);
@@ -215,6 +224,8 @@ public class PrimaryController implements Initializable {
                 String menuItem = resultSet.getString("name");
                 CheckBox checkBox = new CheckBox(menuItem);
                 checkBox.getStyleClass().add("checkBox");
+
+                //add the item to the table view check if unchecked
                 checkBox.setOnAction(event -> {
                     if(checkBox.isSelected()){
                         populateTableView("menu_item", menuItem);
@@ -230,6 +241,8 @@ public class PrimaryController implements Initializable {
                 String drink = resultSet.getString("size");
                 CheckBox checkBox = new CheckBox(drink);
                 checkBox.getStyleClass().add("checkBox");
+
+                //add the item to the table view check if unchecked
                 checkBox.setOnAction(event -> {
                     if(checkBox.isSelected()){
                         populateTableView("drinks", drink);
@@ -239,7 +252,7 @@ public class PrimaryController implements Initializable {
                 vboxDrink.getChildren().add(checkBox);
             }
 
-
+        //catch sql erros and show error window
         } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
@@ -255,6 +268,20 @@ public class PrimaryController implements Initializable {
         tableView.getItems().removeIf(item -> item.getName().equals(itemName));
     }
 
+    //change scene to Waiter
+    @FXML
+    public void changeSceneWaiter(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("WaiterView.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.setTitle("Waiter");
+        scene.getStylesheets().add("application.css");
+        stage.show();
+    }
+
+    //logout button just changes back to login fxml
     @FXML
     public void logoutBtnAction(ActionEvent event){
         try{
@@ -267,6 +294,8 @@ public class PrimaryController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    //generates the report based on the radio button selected
     @FXML
     void salesTableBtnAction(ActionEvent event){
         LocalDate startDateValue = startDate.getValue();
@@ -274,10 +303,12 @@ public class PrimaryController implements Initializable {
         Timestamp start = null;
         Timestamp end = null;
 
+        //setting time to now if end date not selected
         if (endDateValue == null) {
             endDateValue = LocalDate.now();
         }
 
+        //restock requires no date and time no need to set
         if(!("restock".equals(reportType))){
             start = Timestamp.valueOf(startDateValue.atStartOfDay());
             LocalDateTime endDateTime = endDateValue.atTime(23, 59, 59);
@@ -286,6 +317,8 @@ public class PrimaryController implements Initializable {
            
         try{
             connection = DriverManager.getConnection("jdbc:postgresql://csce-315-db.engr.tamu.edu/csce331_550_01_db", "csce331_550_01_user", "cSCUE8w9");
+
+            //error if no report type selected
             if (reportType == null) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("NO REPORT SELECTED");
@@ -295,8 +328,11 @@ public class PrimaryController implements Initializable {
                 alert.showAndWait();
                 return;
             }
+
             switch (reportType) {
+
                 case "sales":
+
                 if(start == null || end == null){
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("NO DATE SELECTED");
@@ -306,6 +342,9 @@ public class PrimaryController implements Initializable {
                     alert.showAndWait();
                     return;
                 }
+
+                salesName.setText("Item");
+                item2Name.setText("");
                 CallableStatement statement = connection.prepareCall("{call sales_report(?, ?)}");
                 statement.setTimestamp(1, start);
                 statement.setTimestamp(2, end);
@@ -318,13 +357,14 @@ public class PrimaryController implements Initializable {
                 while (resultSet.next()) {
                     String column1 = resultSet.getString("item_name");
                     long column2 = resultSet.getLong("count");
-                    // Get more columns as needed
-        
+      
                     RowData row = new RowData(column1, column2,null);
                     salesTable.getItems().add(row);
                 }
                 break;
+
                 case "usage":
+
                 if(start == null || end == null){
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("NO DATE SELECTED");
@@ -334,12 +374,18 @@ public class PrimaryController implements Initializable {
                     alert.showAndWait();
                     return;
                 }
+
                 CallableStatement statement2 = connection.prepareCall("{call product_usage(?, ?)}");
-                salesName.setText("Date");
+                salesName.setText("Item");
+                item2Name.setText("");
                 statement2.setTimestamp(1, start);
                 statement2.setTimestamp(2, end);
                 resultSet = statement2.executeQuery();
+
+                // Clear the table
                 salesTable.getItems().clear();
+
+                // Loop through the result set and add rows to the table
                 while (resultSet.next()) {
                     String column1 = resultSet.getString("name");
                     long column2 = resultSet.getLong("count");
@@ -358,22 +404,36 @@ public class PrimaryController implements Initializable {
                         alert.showAndWait();
                         return;
                     }
-                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?)}");
+
+                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?, ?)}");
                     statement3.setTimestamp(1, start);
+                    statement3.setTimestamp(2, end );
                     resultSet = statement3.executeQuery();
+
+                    // Clear the table
                     salesTable.getItems().clear();
+
+                    // Loop through the result set and add rows to the table
                     while (resultSet.next()) {
                         String column1 = resultSet.getString("name_of_item");
                         RowData row = new RowData(column1, 0,null);
                         salesTable.getItems().add(row);
                     }
                     break;
+                
                 case "pairs":
+
                     CallableStatement statement4 = connection.prepareCall("{call sells_together(?,?)}");
+                    salesName.setText("Item 1");
+                    item2Name.setText("Item 2");
                     statement4.setTimestamp(1, start);
                     statement4.setTimestamp(2, end);
                     resultSet = statement4.executeQuery();
+
+                    // Clear the table
                     salesTable.getItems().clear();
+
+                    // Loop through the result set and add rows to the table
                     while (resultSet.next()) {
                         String column1 = resultSet.getString("item_1");
                         String column2 = resultSet.getString("item_2");
@@ -382,10 +442,17 @@ public class PrimaryController implements Initializable {
                         salesTable.getItems().add(row);
                     }
                     break;
+
                 case "restock":
+                    salesName.setText("Item");
+                    item2Name.setText("");
                     CallableStatement statement5 = connection.prepareCall("{call restock()}");
                     resultSet = statement5.executeQuery();
+
+                    // Clear the table
                     salesTable.getItems().clear();
+
+                    // Loop through the result set and add rows to the table
                     while (resultSet.next()) {
                         String column1 = resultSet.getString("item");
                         int column2 = resultSet.getInt("quantity");
@@ -395,8 +462,12 @@ public class PrimaryController implements Initializable {
                     break;
 
         }
+
+        // clear dates after report is generated
         startDate.setValue(null);
         endDate.setValue(null);
+
+        //catch sql errors and show error window
         }catch(SQLException e){
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("SQL ERROR");
@@ -407,6 +478,7 @@ public class PrimaryController implements Initializable {
         }
     }
 
+    //class to hold the data for the table
     public static class RowData {
     private final SimpleStringProperty column1;
     private final LongProperty column2;
@@ -437,6 +509,7 @@ public class PrimaryController implements Initializable {
 
     //adds the items to the table
     private void populateTableView(String tableName, String itemName) {
+
         String columnName = "name";
         String priceName = "price";
         if ("drinks".equals(tableName)) {
@@ -449,20 +522,23 @@ public class PrimaryController implements Initializable {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + " = ?")) {
             preparedStatement.setString(1, itemName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
                 while (resultSet.next()) {
                     double quantity;
                     String name;
                     String stock;
+
                     if("drinks".equals(tableName)){
                         name = resultSet.getString("size");
                         stock = "N/A";
                     }else{
                         name = resultSet.getString("name");
-                        if("ingredients".equals(tableName)){
-                            stock = String.valueOf(resultSet.getInt("stock"));
-                        }else{
-                            stock = "N/A";
-                        }
+                    }
+
+                    if("ingredients".equals(tableName)){
+                        stock = String.valueOf(resultSet.getInt("stock"));
+                    }else{
+                        stock = "N/A";
                     }
                     quantity=resultSet.getDouble(priceName);
                     
@@ -479,6 +555,8 @@ public class PrimaryController implements Initializable {
             return;
         }
     }
+
+    //class to hold the data for the table
     public static class DataItem {
         private final String name;
         private final double price;
