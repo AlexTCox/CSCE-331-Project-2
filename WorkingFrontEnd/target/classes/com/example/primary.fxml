@@ -111,9 +111,9 @@
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text layoutX="15.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reports">
+            <Text layoutX="15.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reports - If no end date selected. Current date is default">
                <font>
-                  <Font size="18.0" />
+                  <Font size="13.0" />
                </font>
             </Text>
          </children></AnchorPane>

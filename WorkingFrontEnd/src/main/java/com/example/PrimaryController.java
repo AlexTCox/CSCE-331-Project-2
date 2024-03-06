@@ -85,7 +85,12 @@ public class PrimaryController implements Initializable {
 
     @FXML
 
-    //this just opens the second window to edit stuff
+    /**
+     * Opens the stock window when the stock button is clicked.
+     * Loads the stock window FXML file and sets it as the current scene.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     void stockBtnAction(ActionEvent event){
         try{
             Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));
@@ -104,7 +109,13 @@ public class PrimaryController implements Initializable {
 
     }
 
-    //Simple change scene function
+   /**
+     * Changes the scene to the stock scene.
+     * Loads the stock scene FXML file and sets it as the current scene.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     * @throws IOException if there is an error loading the FXML file
+     */
     public void changeScene(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("stockWindow.fxml"));
         Scene scene = new Scene(root);
@@ -115,6 +126,12 @@ public class PrimaryController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * 
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //need to securely do this
@@ -271,7 +288,13 @@ public class PrimaryController implements Initializable {
         tableView.getItems().removeIf(item -> item.getName().equals(itemName));
     }
 
-    //change scene to Waiter
+    /**
+     * Changes the scene to the Waiter view.
+     * Loads the Waiter view FXML file and sets it as the current scene.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     * @throws IOException if there is an error loading the FXML file
+     */
     @FXML
     public void changeSceneWaiter(ActionEvent event) throws IOException {
 
@@ -284,7 +307,12 @@ public class PrimaryController implements Initializable {
         stage.show();
     }
 
-    //logout button just changes back to login fxml
+    /**
+     * Logs out the user by changing the scene back to the login view.
+     * Loads the login view FXML file and sets it as the current scene.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     public void logoutBtnAction(ActionEvent event){
         try{
@@ -292,13 +320,18 @@ public class PrimaryController implements Initializable {
         Scene scene = new Scene(root);
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
+        scene.getStylesheets().add("application.css");
         stage.show();
         }catch(IOException e) {
             e.printStackTrace();
         }
     }
 
-    //generates the report based on the radio button selected
+    /**
+     * Generates the report based on the selected radio button.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void salesTableBtnAction(ActionEvent event){
         LocalDate startDateValue = startDate.getValue();
@@ -352,7 +385,8 @@ public class PrimaryController implements Initializable {
                 statement.setTimestamp(1, start);
                 statement.setTimestamp(2, end);
                 ResultSet resultSet = statement.executeQuery();
-        
+                salesQuantity.setVisible(true);
+
                 // Clear the table
                 salesTable.getItems().clear();
         
@@ -384,6 +418,7 @@ public class PrimaryController implements Initializable {
                 statement2.setTimestamp(1, start);
                 statement2.setTimestamp(2, end);
                 resultSet = statement2.executeQuery();
+                salesQuantity.setVisible(true);
 
                 // Clear the table
                 salesTable.getItems().clear();
@@ -408,11 +443,11 @@ public class PrimaryController implements Initializable {
                         return;
                     }
 
-                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?, ?)}");
+                    CallableStatement statement3 = connection.prepareCall("{call excess_report(?)}");
                     statement3.setTimestamp(1, start);
-                    statement3.setTimestamp(2, end );
                     resultSet = statement3.executeQuery();
-
+                    salesQuantity.setVisible(false);
+                    item2Name.setText("");
                     // Clear the table
                     salesTable.getItems().clear();
 
@@ -420,6 +455,7 @@ public class PrimaryController implements Initializable {
                     while (resultSet.next()) {
                         String column1 = resultSet.getString("name_of_item");
                         RowData row = new RowData(column1, 0,null);
+
                         salesTable.getItems().add(row);
                     }
                     break;
@@ -432,6 +468,7 @@ public class PrimaryController implements Initializable {
                     statement4.setTimestamp(1, start);
                     statement4.setTimestamp(2, end);
                     resultSet = statement4.executeQuery();
+                    salesQuantity.setVisible(true);
 
                     // Clear the table
                     salesTable.getItems().clear();
@@ -451,7 +488,7 @@ public class PrimaryController implements Initializable {
                     item2Name.setText("");
                     CallableStatement statement5 = connection.prepareCall("{call restock()}");
                     resultSet = statement5.executeQuery();
-
+                    salesQuantity.setVisible(true);
                     // Clear the table
                     salesTable.getItems().clear();
 
@@ -510,7 +547,13 @@ public class PrimaryController implements Initializable {
     }
 }
 
-    //adds the items to the table
+    /**
+     * Adds the items to the table view based on the selected category and item.
+     * 
+     * @param tableName The name of the table from which to fetch data.
+     * @param itemName The name of the item to fetch from the table.
+     */
+    
     private void populateTableView(String tableName, String itemName) {
 
         String columnName = "name";

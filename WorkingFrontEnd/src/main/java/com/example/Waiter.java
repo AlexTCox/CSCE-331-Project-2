@@ -1,6 +1,18 @@
 package com.example;
 
-import javafx.application.Application;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Array;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,23 +20,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 // import static com.example.demo.Database.Query;
 
@@ -62,9 +63,6 @@ public class Waiter implements Initializable{
 
         String query = "SELECT * FROM menu_Item";
         List<Button> buttonlist = new ArrayList<>();
-
-        // (Connection con = DriverManager.getConnection(url, user, password);
-        //             PreparedStatement pst = con.prepareStatement(query))
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -107,8 +105,6 @@ public class Waiter implements Initializable{
 
         String query = "SELECT * FROM ingredients";
         List<Button> buttonlist = new ArrayList<>();
-
-        // (Connection con = DriverManager.getConnection(url, user, password);
         //             PreparedStatement pst = con.prepareStatement(query))
 
         try {
@@ -164,9 +160,6 @@ public class Waiter implements Initializable{
 
         String query = "SELECT * FROM drinks";
         List<Button> buttonlist = new ArrayList<>();
-
-        // (Connection con = DriverManager.getConnection(url, user, password);
-        //             PreparedStatement pst = con.prepareStatement(query))
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -354,6 +347,7 @@ public class Waiter implements Initializable{
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle("Login");
+        scene.getStylesheets().add("application.css");
         stage.show();
         }catch(IOException e) {
             e.printStackTrace();

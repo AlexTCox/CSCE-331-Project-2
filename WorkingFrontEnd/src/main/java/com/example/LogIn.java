@@ -19,7 +19,12 @@ public class LogIn {
     @FXML
     private PasswordField passkey;
 
-    // Function to user Login
+    /**
+     * Performs user login authentication based on the provided username and password.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     * @throws IOException if there is an error loading the FXML file
+     */
     public void userLogIn(ActionEvent event) throws IOException
     {
         // Storing JDBC URL, username, and password of SQL server
