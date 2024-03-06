@@ -117,7 +117,13 @@ public class StockController implements Initializable{
     
     }
 
-    //changes the scene to the primary scene
+    /**
+     * Changes the scene to the primary scene.
+     * Loads the primary scene FXML file and sets it as the current scene.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     * @throws IOException if there is an error loading the FXML file
+     */
     @FXML
     public void changeScene(ActionEvent event) throws IOException {
 
@@ -130,7 +136,13 @@ public class StockController implements Initializable{
         stage.show();
     }
 
-    //controls what fields are visable when ingredient category is open and populates the ingredient box
+    /**
+     * Handles the button action for the ingredients category.
+     * Sets the category to ingredients and adjusts visibility of UI elements accordingly.
+     * Populates the VBox with ingredients data retrieved from the database.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void btnActionIngredients(ActionEvent event){
 
@@ -154,7 +166,13 @@ public class StockController implements Initializable{
 
     }
 
-    //controls what fields are visable when menu category is open
+    /**
+     * Handles the button action for the menu category.
+     * Sets the category to menu_item and adjusts visibility of UI elements accordingly.
+     * Populates the VBox with menu item data retrieved from the database.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void btnActionInMenu(ActionEvent event){
 
@@ -209,6 +227,7 @@ public class StockController implements Initializable{
             menuIngredVbox.getChildren().addAll(checkBoxes);
             menuIngredients.setContent(menuIngredVbox);
 
+
         //catch sql errors and display an alert
         } catch (SQLException e) {
             e.printStackTrace();
@@ -221,7 +240,13 @@ public class StockController implements Initializable{
         }
     }
 
-    //controls what fields are visable when drink category is open and populates the drink box
+    /**
+     * Handles the button action for the drinks category.
+     * Sets the category to drinks and adjusts visibility of UI elements accordingly.
+     * Populates the VBox with drink data retrieved from the database.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void btnActionInDrink(ActionEvent event){
 
@@ -246,7 +271,12 @@ public class StockController implements Initializable{
 
         }
 
-    //this functioon just populates the vbox for ingredients and menu. but can be more generalized if more tables added
+    /**
+     * Populates the VBox with query results based on the given SQL query.
+     * Clears the existing content in the VBox and populates it with data retrieved from the database.
+     * 
+     * @param query The SQL query to retrieve data from the database.
+     */
     private void populateVBoxWithQueryResults(String query) {
         // Clear the existing content in the VBox
         tableItems.getChildren().clear();
@@ -305,6 +335,7 @@ public class StockController implements Initializable{
                         stockField.setVisible(false);
                         stockSetBtn.setVisible(false);
                         menuIngredients.setVisible(false);
+                        currStock.setText("");
             
                     }
                     else{
@@ -313,6 +344,7 @@ public class StockController implements Initializable{
                         stockField.setVisible(false);
                         stockSetBtn.setVisible(false);
                         menuIngredients.setVisible(false);
+                        currStock.setText("");
                     }
 
                     //clear text fields
@@ -340,7 +372,16 @@ public class StockController implements Initializable{
             return;
         }
     }
-    //needed to condense the amount of times i did this
+    /**
+     * Sets the visibility of various UI elements.
+     * Controls which UI elements are visible based on the parameters.
+     * 
+     * @param nameVisible     Visibility of the nameTextField.
+     * @param priceVisible    Visibility of the priceTextField.
+     * @param newStockVisible Visibility of the newStockTextField.
+     * @param minStockVisible Visibility of the minStockTextField.
+     * @param submitVisible   Visibility of the submitItemBtn.
+     */
     private void setFieldsVisibility(boolean nameVisible, boolean priceVisible, boolean newStockVisible,
                                      boolean minStockVisible, boolean submitVisible) {
         nameTextField.setVisible(nameVisible);
@@ -350,7 +391,11 @@ public class StockController implements Initializable{
         submitItemBtn.setVisible(submitVisible);
     }
 
-    //self explanatory
+    
+    /**
+     * Clears all input fields.
+     * Resets the text content of all input fields to empty strings.
+     */
     private void clearFields() {
         nameTextField.clear();
         priceTextField.clear();
@@ -361,7 +406,12 @@ public class StockController implements Initializable{
 
     }
 
-    //this acts just to get the radio button that is selected
+    /**
+     * Retrieves the selected radio button from the VBox.
+     * Iterates through the children of the VBox to find the selected radio button.
+     * 
+     * @return The selected RadioButton object, or null if none is selected.
+     */
     private RadioButton getSelectedRadioButton() {
         for (int i = 0; i < tableItems.getChildren().size(); i++) {
             if (tableItems.getChildren().get(i) instanceof RadioButton) {
@@ -374,7 +424,12 @@ public class StockController implements Initializable{
         return null;
     }
 
-    //BIG function. this is how all the prices are updated when the set price button is pressed
+    /**
+     * Handles the action when the price button is clicked.
+     * Updates the price of the selected item in the database based on user input.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void priceButtonAction(ActionEvent event) {
 
@@ -417,7 +472,7 @@ public class StockController implements Initializable{
 
                         // Check if the price was updated successfully
                         if (rowsAffected > 0) {
-                            System.out.println("Price updated successfully.");
+                            currStock.setText("New price for" + itemName + " is $" +newPrice);
                         } else {
                             Alert alert = new Alert(AlertType.ERROR);
                             alert.setTitle("PRICE ERROR");
@@ -474,7 +529,12 @@ public class StockController implements Initializable{
         }
     }
 
-    //Big function 2 updates the stock of item
+    /**
+     * Handles the action when the stock button is clicked.
+     * Updates the stock of the selected item in the database based on user input.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void stockBtnAction(ActionEvent event){
         RadioButton selectedRadioButton =getSelectedRadioButton();
@@ -510,7 +570,7 @@ public class StockController implements Initializable{
 
                         // Check if the stock was updated successfully
                         if (rowsAffected > 0) {
-                            System.out.println("Stock updated successfully.");
+                            currStock.setText("New stock for" + itemName + " is " + newStock + " Units");
                         } else {
                             System.out.println("Failed to update stock.");
                         }
@@ -562,7 +622,12 @@ public class StockController implements Initializable{
         }
     }
 
-    //this is the function that adds the new item to the database
+    /**
+     * Handles the action when the new item button is clicked.
+     * Adds a new item to the database based on user input.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     */
     @FXML
     void newItemBtn(ActionEvent event){
 
@@ -604,6 +669,8 @@ public class StockController implements Initializable{
                 statement.setInt(2, newStock);
                 statement.setDouble(3, newPrice);
                 statement.setInt(4, newMinStock);
+                currStock.setText(nameText + " Added");
+                
 
                 // populateVBoxWithQueryResults("SELECT * FROM ingredients;");
                 break;
@@ -628,7 +695,10 @@ public class StockController implements Initializable{
                 menuFxn.setString(2, nameText);
                 menuFxn.setFloat(3, (float) menuItemPrice);
                 menuFxn.setArray(4, ingredients);
-                fxnCalled =true;
+                fxnCalled = true;
+                currStock.setText(nameText + " Added");
+                
+
                 break;
 
             case "drinks":
@@ -649,6 +719,7 @@ public class StockController implements Initializable{
                 statement = connection.prepareStatement("INSERT INTO drinks (size, price) VALUES (?, ?)");
                 statement.setString(1, size);
                 statement.setDouble(2, drinkPrice);
+                currStock.setText(size + " Added");
                 break;
 
             default:
@@ -657,6 +728,7 @@ public class StockController implements Initializable{
                 alert.setHeaderText("INVALID CATEGORY");
                 alert.setContentText("THIS SHOULD BE IMPOSSIBLE");
                 alert.showAndWait();
+                
         }
 
         // Execute the statement and get the number of rows affected or if fxn was called act accordingly
@@ -665,6 +737,7 @@ public class StockController implements Initializable{
         }
         if(fxnCalled){
             rowsAffected = menuFxn.executeUpdate();
+            fxnCalled =menuFxn.getBoolean(1);
         }
         if (rowsAffected > 0 || fxnCalled) {
 
@@ -672,11 +745,16 @@ public class StockController implements Initializable{
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("ITEM ERROR");
             alert.setHeaderText("FAILED TO ADD ITEM");
-            alert.setContentText("Ensure you entered all fields and that you are connected to the internet");
+            alert.setContentText("Ensure you entered all fields and the item is unique");
             alert.showAndWait();
             return;
         }
-
+        
+        for(Node node :menuIngredVbox.getChildren()){
+            if(node instanceof CheckBox){
+                ((CheckBox)node).setSelected(false);
+            }
+        }
         refreshVBox();
         clearFields();
 
@@ -705,32 +783,28 @@ public class StockController implements Initializable{
     }
 }
 
-//refreshes the vbox to update information
-private void refreshVBox() {
-    switch (category) {
-        case "ingredients":
-            populateVBoxWithQueryResults("SELECT * FROM ingredients;");
-            break;
-        case "menu_item":
-            populateVBoxWithQueryResults("SELECT * FROM menu_Item;");
-            break;
-        case "drinks":
-            populateVBoxWithQueryResults("SELECT * FROM drinks;");
-            break;
-        default:
-            System.out.println("Invalid category");
-        
-    }
+    /**
+     * Refreshes the VBox to update information.
+     * Refreshes the content of the VBox based on the current category.
+     */
+    private void refreshVBox() {
+        switch (category) {
+            case "ingredients":
+                populateVBoxWithQueryResults("SELECT * FROM ingredients;");
+                break;
+            case "menu_item":
+                populateVBoxWithQueryResults("SELECT * FROM menu_Item;");
+                break;
+            case "drinks":
+                populateVBoxWithQueryResults("SELECT * FROM drinks;");
+                break;
+            default:
+                System.out.println("Invalid category");
+            
+        }
 
-    priceButton.setVisible(false);
-    priceField.setVisible(false);
-    stockField.setVisible(false);
-    stockSetBtn.setVisible(false);
-    menuIngredients.setVisible(false);
-    setFieldsVisibility(false, false, false, false, false);
-    clearFields();
-    currStock.setText("");
-}
+        clearFields();
+    }
 
 
 

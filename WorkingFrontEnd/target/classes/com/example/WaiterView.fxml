@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="618.0" style="-fx-background-color: #ED6F13;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.Waiter">
    <children>
-      <ScrollPane fitToWidth="true" layoutX="26.0" layoutY="117.0" prefHeight="200.0" prefWidth="251.0" style="-fx-background-color: #E7BE45;">
+      <ScrollPane fitToWidth="true" layoutX="26.0" layoutY="117.0" prefHeight="200.0" prefWidth="251.0" style="-fx-background-color: #E7BE45;" styleClass="scrollPane">
          <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F1D59D;">
                <children>

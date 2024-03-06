@@ -16,7 +16,7 @@ public class App extends Application {
         // Assign the primary stage to the static variable
         stg = primarystage;
         // Make the primary stage non-resizable
-        primarystage.setResizable(false);
+        // primarystage.setResizable(false);
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         primarystage.setTitle("Login");
@@ -29,7 +29,13 @@ public class App extends Application {
         launch();
     }
 
-    // Method to change the scene to the one specified by the given FXML file
+       /**
+     * Changes the scene to manager or waiter scene.
+     * Loads the scene FXML file and sets it as the current scene.
+     * 
+     * @param event An ActionEvent object representing the event of the button press.
+     * @throws IOException if there is an error loading the FXML file
+     */
     public void changeuserScene(String fxml) throws IOException
     {
         // Load the FXML file for the new scene using FXMLLoader

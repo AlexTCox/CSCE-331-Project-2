@@ -24,7 +24,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="246.0" style="-fx-background-color: transparent;">
                      <children>
-                        <VBox id="tableItems" fx:id="tableItems" prefHeight="206.0" prefWidth="248.0" />
+                        <VBox id="tableItems" fx:id="tableItems" prefHeight="206.0" />
                      </children>
                   </AnchorPane>
               </content>
